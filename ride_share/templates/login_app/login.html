@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>WILDRIDE</title>
+</head>
+<body>
+  <div class="container">
+    <form method="POST">
+      <h2>LOGIN</h2>
+      <input id="email_input" type="email" placeholder="Email" required>
+      <input id="password_input" type="password" placeholder="password" required >
+      <button id="button" type="submit">log in</button>
+    </form>
+  </div>
+</body>
+
+</html>

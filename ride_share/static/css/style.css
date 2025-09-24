@@ -1,0 +1,71 @@
+/* Make sure body and html take full height */
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+/* Container with background image and flex centering */
+.container {
+  display: flex;
+  justify-content: center;  /* horizontally center */
+  align-items: center;      /* vertically center */
+  height: 100vh;            /* full viewport height */
+  
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 2), rgba(0, 0, 0, .2)), /* dark semi-transparent overlay */
+    url('https://i.pinimg.com/1200x/64/5e/bf/645ebf1a31085f4e544e3ef75564eb63.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Style the form */
+form {
+  background: rgba(255, 255, 255, 0.9); /* white with slight transparency */
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+}
+
+/* Form heading */
+form h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+/* Style inputs */
+input[type="email"],
+input[type="password"] {
+  padding: 12px 10px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+}
+
+/* Style button */
+button {
+    align-self: center;
+    width: 60%;
+    margin-top: 30px;
+    margin-bottom: 40px;
+  padding: 12px;
+  background-color: #494b4d; /* blue */
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
