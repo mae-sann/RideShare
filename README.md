@@ -99,7 +99,9 @@ Contributions are welcome!
 5. Open a Pull Request
 
 
-👨‍💻 Authors
+## 👨‍💻 Authors
 Ano-os, Iesus Rey
+
 Atamosa, Charry Mae
+
 Auditor, Mechole
