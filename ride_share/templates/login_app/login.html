@@ -5,18 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-
     <title>WILDRIDE</title>
 </head>
 <body>
   <div class="container">
     <form method="POST">
+      {% csrf_token %}
       <h2>LOGIN</h2>
-      <input id="email_input" type="email" placeholder="Email" required>
-      <input id="password_input" type="password" placeholder="password" required >
+      <input id="email_input" name="email" type="email" placeholder="Email" required>
+      <input id="password_input" name="password" type="password" placeholder="Password" required minlength="6">
       <button id="button" type="submit">log in</button>
+      {% if error %}
+        <p style="color:red;">{{ error }}</p>
+      {% endif %}
     </form>
   </div>
 </body>
-
 </html>
