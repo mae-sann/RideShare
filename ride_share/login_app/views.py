@@ -1,16 +1,18 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .forms import UserLoginForm
 
 def login(request):
       error = None
-      if request.method == "POST":
-            email = request.POST.get("email", "").strip()
-            password = request.POST.get("password", "")
-            if not email or not password:
-                  error = "Both fields are required."
-            elif len(password) < 6:
-                  error = "Password must be at least 6 characters."
-      # Add more validation as needed
-      else:
-            # Authenticate user here
-            pass
-      return render(request, "login_app/login.html", {"error": error})
+      form = UserLoginForm(request.POST or None)
+      
+      if request.method == "POST" and form.is_valid():
+       # email = form.cleaned_data['email']
+       # password = form.cleaned_data['password']
+        #user = authenticate(request, email=email, password=password)  # or use a custom backend if username != email
+        #if user:
+            #login(request, user)  # logs the user in, session starts
+            return redirect('register')  # change to your dashboard/home page
+        #else:
+           # error = "Invalid email or password."
+
+      return render(request, "login_app/login.html", {"form": form,"error": error})

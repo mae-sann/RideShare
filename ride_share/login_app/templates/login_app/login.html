@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'login_app/css/styles.css' %}" />
+    <title>WILDRIDE</title>
+</head>
+<body>
+  <div class="title"><h3>Campus RideShare</h3></div>
+    <div class="container">
+      <form method="POST">
+        {% csrf_token %}
+          <h2>Campus RideShare</h2>
+            <p class="subheader" >Login to your account</p>
+              {{form.as_p}}
+            <div class="forgot-password-container">
+              <a class="forgot-password" href="">Forgot Password?</a>
+            </div>
+            <button id="button" type="submit">Login</button>
+            {% if error %}
+              <p style="color:red;">{{ error }}</p>
+            {% endif %}
+      </form>
+
+      <h4 class="account">Already have an account? <a class="register-link" href="{%url 'register'%}">Register</a></h4>
+    </div>
+</body>
+</html>
