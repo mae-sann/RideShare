@@ -1,0 +1,99 @@
+/* Center the container horizontally and vertically */
+body {
+    display: flex;
+    justify-content: center; /* horizontal center */
+    align-items: center;     /* vertical center */
+    height: 100vh;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Title in top-left */
+.title {
+    position: absolute; /* keeps it at top-left of the page */
+    top: 0px;
+    left: 15px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+}
+
+
+/* Container styling */
+.container {
+    width: 350px;
+    border: 1px solid rgb(107, 107, 107);
+    border-radius: 10px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Form heading */
+.container h2 {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    color: #000000;
+}
+
+.container .subheader{
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 15px;
+    font-weight: 400;
+    color: #3a3939;
+}
+
+/* Labels and inputs */
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.forgot-password {
+    display: block;           /* makes it behave like a block-level element */
+    text-align: right;        /* aligns the text to the right */
+    margin-bottom: 15px;      /* space below the link */
+    text-decoration: none;    /* remove underline if you want */
+    color: #484848;           /* link color */
+    font-size: 14px;
+}
+
+.account{
+    display: block;           
+    text-align: right;
+    color: #484848;
+}
+
+.register-link{
+    color: #000000;
+    text-decoration: none;
+
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #000000;
+    color: white;
+    font-size: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #1b1c1b;
+}
