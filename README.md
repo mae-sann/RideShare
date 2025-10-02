@@ -1,8 +1,8 @@
-# 🚗 RideShare  
+# 🚗 CampusRideShare  
 
-**Campus RideShare** is a web-based application designed exclusively for students, providing a safe, affordable, and eco-friendly carpooling solution.  
+**Campus RideShare**  is a web-based application designed exclusively for **CIT-U students**, providing a safe, affordable, and eco-friendly carpooling solution. 
 
-Drivers can post available rides with trip details, while passengers can search and book seats. This reduces commuting costs, alleviates traffic congestion, promotes environmental sustainability, and fosters stronger community connections within the campus.  
+DDrivers can post available rides with trip details, while passengers can search and book seats. This reduces commuting costs, alleviates traffic congestion, promotes environmental sustainability, and fosters stronger community connections within the campus.   
 
 ---
 
@@ -11,16 +11,16 @@ Drivers can post available rides with trip details, while passengers can search 
 - 📍 **Ride Posting**: Drivers can post trip details (origin, destination, time, available seats)  
 - 🔍 **Ride Search & Booking**: Passengers can search and reserve available rides  
 - 💬 **Communication**: In-app messaging or contact between drivers and passengers  
-- 🔒 **Authentication**: Secure login and signup for verified students  
+- 🔒 **Authentication**: Secure login and signup using **CIT-U student email**  
 - 📊 **Ride Management**: View, update, or cancel ride offers and bookings  
-- 🌱 **Sustainability**: Encourages eco-friendly commuting and reduces traffic congestion  
-
+- 🌱 **Sustainability**: Encourages eco-friendly commuting and reduces traffic congestion
+  
 ---
 
 ## 🛠️ Tech Stack  
 - **Frontend**: HTML, CSS, JavaScript  
-- **Backend**: Django
-- **Database**: MySQL, SQLite 
+- **Backend**: Django (Python)  
+- **Database**: MySQL (production), SQLite (development)  
 - **Authentication**: Student email-based signup/login  
 
 ---
@@ -30,7 +30,7 @@ Drivers can post available rides with trip details, while passengers can search 
 1. **Clone the repository**
 ```
    git clone https://github.com/your-username/rideshare.git
-   cd rideshare
+   cd ride_share
 ```
 2. **Set up the environment**
 
@@ -63,45 +63,31 @@ http://127.0.0.1:8000/
 - For Drivers:
 
 1. Register/Login with campus email
-
 2. Post ride details (location, time, available seats)
-
 3. Manage and update ride offers
   
 - For Passengers:
 
-1. Register/Login with campus email
-
+1. Register/Login with your CIT-U email
 2. Search rides based on origin/destination
-
 3. Book a seat and connect with the driver
 
 ## 🎯 Project Goals
-Reduce student commuting costs
-
+- Reduce student commuting costs
 - Promote environmental sustainability by lowering carbon emissions
-
 - Alleviate campus traffic congestion
-
 - Strengthen community connections among students
 
 ## 🤝 Contributing
 Contributions are welcome!
 
 1. Fork the repository
-
 2. Create a new branch (feature/your-feature)
-
 3. Commit your changes
-
 4. Push to the branch
-
 5. Open a Pull Request
 
-
 ## 👨‍💻 Authors
-Ano-os, Iesus Rey
-
-Atamosa, Charry Mae
-
-Auditor, Mechole
+- Ano-os, Iesus Rey A.
+- Atamosa, Charry Mae A.
+- Auditor, Mechole Angelou M.
