@@ -2,7 +2,7 @@
 
 **Campus RideShare**  is a web-based application designed exclusively for **CIT-U students**, providing a safe, affordable, and eco-friendly carpooling solution. 
 
-DDrivers can post available rides with trip details, while passengers can search and book seats. This reduces commuting costs, alleviates traffic congestion, promotes environmental sustainability, and fosters stronger community connections within the campus.   
+Drivers can post available rides with trip details, while passengers can search and book seats. This reduces commuting costs, alleviates traffic congestion, promotes environmental sustainability, and fosters stronger community connections within the campus.   
 
 ---
 
