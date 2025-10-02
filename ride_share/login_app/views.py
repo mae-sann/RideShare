@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-def index(request):
+def login(request):
       error = None
       if request.method == "POST":
             email = request.POST.get("email", "").strip()
