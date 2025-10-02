@@ -62,7 +62,7 @@ http://127.0.0.1:8000/
 ## 📌 Usage
 - For Drivers:
 
-1. Register/Login with campus email
+1. Register/Login with your CIT-U email
 2. Post ride details (location, time, available seats)
 3. Manage and update ride offers
   
