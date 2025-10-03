@@ -11,7 +11,7 @@ def login(request):
         #user = authenticate(request, email=email, password=password)  # or use a custom backend if username != email
         #if user:
             #login(request, user)  # logs the user in, session starts
-            return redirect('register')  # change to your dashboard/home page
+            return redirect('dashboard')  # change to your dashboard/home page
         #else:
            # error = "Invalid email or password."
 
