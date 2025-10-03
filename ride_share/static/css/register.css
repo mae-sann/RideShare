@@ -1,35 +1,55 @@
-/* Center the container horizontally and vertically */
+/* Body font */
 body {
-    display: flex;
-    justify-content: center; /* horizontal center */
-    align-items: center;     /* vertical center */
-    height: 100vh;
-    margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: #f5f5f5;
 }
 
-/* Title in top-left */
-.title {
+.title{
     position: absolute; /* keeps it at top-left of the page */
     top: 0px;
     left: 15px;
+    bottom: 20px;
     font-size: 28px;
     font-weight: 700;
     color: #333;
 }
 
-/* Card layout for register */
+/* Reset browser defaults for all inputs inside .card */
+.card input {
+    width: 100%;
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 0;
+    outline: none;
+    box-sizing: border-box;
+}
+
+/* Card styling */
 .card {
+    border: 1px solid black;
     max-width: 430px;
     margin: 40px auto;
     padding: 32px 32px 24px 32px;
     background: #fff;
     border-radius: 14px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
 }
 
-/* Headings and subheader */
+/* Icon inside card */
+.card .icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.card .icon img {
+    width: 56px;
+    height: 56px;
+}
+
+/* Heading inside card */
 .card h2 {
     text-align: center;
     font-size: 2rem;
@@ -37,6 +57,7 @@ body {
     margin-bottom: 6px;
 }
 
+/* Subheader text */
 .card .subheader {
     text-align: center;
     color: #888;
@@ -44,7 +65,7 @@ body {
     margin-bottom: 22px;
 }
 
-/* Form layout */
+/* Form row */
 .form-row {
     display: flex;
     gap: 16px;
@@ -54,10 +75,12 @@ body {
     flex: 1;
 }
 
+/* Form group spacing */
 .form-group {
     margin-bottom: 16px;
 }
 
+/* Label styling */
 .form-group label {
     font-size: 0.97rem;
     font-weight: 500;
@@ -65,20 +88,12 @@ body {
     display: block;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    font-size: 1rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    margin-bottom: 0;
-    box-sizing: border-box;
-}
-
+/* Password toggle container */
 .password-group {
     position: relative;
 }
 
+/* Eye icon toggle */
 .toggle-password {
     position: absolute;
     right: 12px;
@@ -87,7 +102,7 @@ body {
     color: #888;
 }
 
-/* Button styles */
+/* Submit button */
 .card button {
     width: 100%;
     padding: 12px;
@@ -107,14 +122,14 @@ body {
 
 /* Account link */
 .card .account {
-    text-align: center;
-    margin-top: 18px;
-    font-size: 1rem;
+    display: block;           
+    text-align: right;
+    color: #484848;
 }
 
 .card .register-link {
-    color: #000;
-    text-decoration: underline;
+    color: #000000;
+    text-decoration: none;
 }
 
 /* Error messages */
@@ -122,16 +137,4 @@ body {
     color: #d00;
     margin-bottom: 10px;
     padding-left: 18px;
-}
-
-/* Responsive for mobile */
-@media (max-width: 600px) {
-    .card {
-        padding: 16px 8px 12px 8px;
-        max-width: 98vw;
-    }
-    .form-row {
-        flex-direction: column;
-        gap: 0;
-    }
 }
