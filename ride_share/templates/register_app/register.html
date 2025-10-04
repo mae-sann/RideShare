@@ -19,18 +19,6 @@
         <div class="subheader">Create your student account</div>
         <form method="POST">
             {% csrf_token %}
-            {% if form.errors %}
-                <ul class="error-list">
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    {% endfor %}
-                    {% for error in form.non_field_errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
             <div class="form-row">
                 <div class="form-group">
                     {{ form.first_name.label_tag }}
@@ -65,6 +53,18 @@
                 {{ form.confirm }}
                 <span class="toggle-password" onclick="togglePassword('id_confirm')">&#128065;</span>
             </div>
+            {% if form.errors %}
+                <ul class="error-list">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             <button type="submit">Register</button>
         </form>
         <h4 class="account">
