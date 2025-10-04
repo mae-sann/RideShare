@@ -15,23 +15,23 @@ body {
 
 /* Reset browser defaults for all inputs inside .card */
 .card input {
+    display: block;
     width: 100%;
-    padding: 10px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    margin-bottom: 0;
-    outline: none;
-    box-sizing: border-box;
+    padding: 8px;            /* match first input padding */
+    box-sizing: border-box;  
+    border-radius: 5px;      /* same rounded corners */
+    border: 1px solid #ccc;  /* same border */
+    font-size: 1rem;         /* optional: adjust if needed */
+    outline: none;           /* remove default focus outline */
 }
+
 
 /* Card styling */
 .card {
-    border: 1px solid black;
+    border: 1px solid rgb(159, 159, 159);
     max-width: 430px;
     margin: 40px auto;
-    padding: 32px 32px 24px 32px;
+    padding: 24px;
     background: #fff;
     border-radius: 14px;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
@@ -52,9 +52,9 @@ body {
 /* Heading inside card */
 .card h2 {
     text-align: center;
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 6px;
+    font-size: 30px;
+    font-weight: 500;
+    color: #000000;
 }
 
 /* Subheader text */
