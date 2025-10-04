@@ -1,6 +1,7 @@
 /* Center the container horizontally and vertically */
 body {
     display: flex;
+    background-color: #ffffff;
     justify-content: center; /* horizontal center */
     align-items: center;     /* vertical center */
     height: 100vh;
@@ -96,3 +97,9 @@ button {
 button:hover {
     background-color: #1b1c1b;
 }
+
+.error-message{
+    color: red !important;
+    font-weight: bold;
+}
+
