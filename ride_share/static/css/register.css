@@ -134,7 +134,8 @@ body {
 
 /* Error messages */
 .error-list {
+    list-style-type: none;
     color: #d00;
     margin-bottom: 10px;
-    padding-left: 18px;
+    padding-left: 5px;
 }
