@@ -3,22 +3,84 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/register.css' %}" />
+    <title>Join Campus RideShare</title>
+ 
 </head>
-    <body>
-        <div class="container">
-            <form method="POST">
-            {% csrf_token %}
-                <h2>REGISTER</h2>
-                <input name="email" type="email" placeholder="Email" required>
-                <input name="password" type="password" placeholder="Password" required minlength="6">
-                <input name="confirm" type="password" placeholder="Confirm Password" required minlength="6">
-                <button type="submit">Register</button>
-                {% if error %}
-                <p style="color:red;">{{ error }}</p>
-            {% endif %}
-            </form>
+<body>
+    <div class="title"><h3>Campus RideShare</h3></div>
+    <div class="card">
+        <div class="icon">
+            <img src="{% static 'login_app/img/car-icon.png' %}" alt="Campus RideShare">
         </div>
-    </body>
+        <h2>Join Campus RideShare</h2>
+        <div class="subheader">Create your student account</div>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.first_name.label_tag }}
+                    {{ form.first_name }}
+                </div>
+                <div class="form-group">
+                    {{ form.last_name.label_tag }}
+                    {{ form.last_name }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.phone.label_tag }}
+                    {{ form.phone }}
+                </div>
+                <div class="form-group">
+                    {{ form.student_id.label_tag }}
+                    {{ form.student_id }}
+                </div>
+            </div>
+            <div class="form-group password-group">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+                <span class="toggle-password" onclick="togglePassword('id_password')">&#128065;</span>
+            </div>
+            <div class="form-group password-group">
+                {{ form.confirm.label_tag }}
+                {{ form.confirm }}
+                <span class="toggle-password" onclick="togglePassword('id_confirm')">&#128065;</span>
+            </div>
+            {% if form.errors %}
+                <ul class="error-list">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <button type="submit">Register</button>
+        </form>
+        <h4 class="account">
+            Already have an account?
+            <a class="register-link" href="{% url 'login' %}">Log in</a>
+        </h4>
+    </div>
+    <script>
+        function togglePassword(fieldId) {
+            var field = document.getElementById(fieldId);
+            if (field.type === "password") {
+                field.type = "text";
+            } else {
+                field.type = "password";
+            }
+        }
+    </script>
+</body>
 </html>

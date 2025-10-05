@@ -1,0 +1,141 @@
+/* Body font */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.title{
+    position: absolute; /* keeps it at top-left of the page */
+    top: 0px;
+    left: 15px;
+    bottom: 20px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Reset browser defaults for all inputs inside .card */
+.card input {
+    display: block;
+    width: 100%;
+    padding: 8px;            /* match first input padding */
+    box-sizing: border-box;  
+    border-radius: 5px;      /* same rounded corners */
+    border: 1px solid #ccc;  /* same border */
+    font-size: 1rem;         /* optional: adjust if needed */
+    outline: none;           /* remove default focus outline */
+}
+
+
+/* Card styling */
+.card {
+    border: 1px solid rgb(159, 159, 159);
+    max-width: 430px;
+    margin: 40px auto;
+    padding: 24px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+}
+
+/* Icon inside card */
+.card .icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.card .icon img {
+    width: 56px;
+    height: 56px;
+}
+
+/* Heading inside card */
+.card h2 {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    color: #000000;
+}
+
+/* Subheader text */
+.card .subheader {
+    text-align: center;
+    color: #888;
+    font-size: 1rem;
+    margin-bottom: 22px;
+}
+
+/* Form row */
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+/* Form group spacing */
+.form-group {
+    margin-bottom: 16px;
+}
+
+/* Label styling */
+.form-group label {
+    font-size: 0.97rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Password toggle container */
+.password-group {
+    position: relative;
+}
+
+/* Eye icon toggle */
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 38px;
+    cursor: pointer;
+    color: #888;
+}
+
+/* Submit button */
+.card button {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    color: #fff;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 6px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.card button:hover {
+    background: #222;
+}
+
+/* Account link */
+.card .account {
+    display: block;           
+    text-align: right;
+    color: #484848;
+}
+
+.card .register-link {
+    color: #000000;
+    text-decoration: none;
+}
+
+/* Error messages */
+.error-list {
+    list-style-type: none;
+    color: #d00;
+    margin-bottom: 10px;
+    padding-left: 5px;
+}

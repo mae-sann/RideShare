@@ -1,22 +1,24 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.contrib import messages
+from .forms import UserRegisterForm
+from .models import RideShareUser
 
 def register(request):
-    error = None
-    if request.method == "POST":
-        email = request.POST.get("email", "").strip()
-        password = request.POST.get("password", "")
-        confirm = request.POST.get("confirm", "")
-        if not email or not password or not confirm:
-            error = "All fields are required."
-        elif password != confirm:
-            error = "Passwords do not match."
-        elif len(password) < 6:
-            error = "Password must be at least 6 characters."
-        elif User.objects.filter(username=email).exists():
-            error = "Email already registered."
-        else:
-            User.objects.create_user(username=email, email=email, password=password)
-            return redirect('')
-    return render(request, "register_app/register.html", {"error": error})
+    form = UserRegisterForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        # Create the User
+        user = User.objects.create_user(
+            username=form.cleaned_data['email'],
+            email=form.cleaned_data['email'],
+            password=form.cleaned_data['password'],
+            first_name=form.cleaned_data['first_name'],
+            last_name=form.cleaned_data['last_name']
+        )
+        # Create the RideShareUser profile
+        RideShareUser.objects.create(
+            user=user,
+            phone=form.cleaned_data['phone'],
+            student_id=form.cleaned_data['student_id']
+        )
+        return redirect('login')
+    return render(request, "register_app/register.html", {"form": form})

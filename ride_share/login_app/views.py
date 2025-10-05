@@ -1,18 +1,27 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.models import User
 from .forms import UserLoginForm
 
 def login(request):
-      error = None
-      form = UserLoginForm(request.POST or None)
-      
-      if request.method == "POST" and form.is_valid():
-       # email = form.cleaned_data['email']
-       # password = form.cleaned_data['password']
-        #user = authenticate(request, email=email, password=password)  # or use a custom backend if username != email
-        #if user:
-            #login(request, user)  # logs the user in, session starts
-            return redirect('register')  # change to your dashboard/home page
-        #else:
-           # error = "Invalid email or password."
+    error = None
+    form = UserLoginForm(request.POST or None)
 
-      return render(request, "login_app/login.html", {"form": form,"error": error})
+    if request.method == "POST" and form.is_valid():
+        email = form.cleaned_data['email']
+        password = form.cleaned_data['password']
+
+        try:
+            # Get the User object linked to this email
+            user_obj = User.objects.get(email=email)
+            # Authenticate using username (Django default)
+            user = authenticate(request, username=user_obj.username, password=password)
+            if user is not None:
+                auth_login(request, user)  # logs the user in
+                return redirect('dashboard')
+            else:
+                error = "Invalid email or password."
+        except User.DoesNotExist:
+            error = "Invalid email or password."
+
+    return render(request, "login_app/login.html", {"form": form, "error": error})
