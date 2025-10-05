@@ -11,6 +11,7 @@
 <body>
   <div class="title"><h3>Campus RideShare</h3></div>
     <div class="container">
+      <img src="" alt="Campus RideShare" class="logo">
       <form method="POST">
         {% csrf_token %}
           <h2>Campus RideShare</h2>
@@ -27,5 +28,30 @@
 
       <h4 class="account">Don't have an account? <a class="register-link" href="{%url 'register'%}">Register</a></h4>
     </div>
+    <script>
+          document.addEventListener('DOMContentLoaded', function() {
+          // find the password input automatically
+          const passwordField = document.querySelector('input[type="password"]');
+          if (passwordField) {
+            // create the eye icon
+            const icon = document.createElement('span');
+            icon.innerHTML = '&#128065;'; // 👁️
+            icon.classList.add('toggle-password');
+
+            // wrap input and icon in a container
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('password-container');
+            passwordField.parentNode.insertBefore(wrapper, passwordField);
+            wrapper.appendChild(passwordField);
+            wrapper.appendChild(icon);
+
+            // toggle visibility
+            icon.addEventListener('click', function() {
+            const isPassword = passwordField.type === 'password';
+            passwordField.type = isPassword ? 'text' : 'password';
+    });
+  }
+});
+</script>
 </body>
 </html>
