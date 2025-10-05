@@ -69,14 +69,32 @@ input {
     border: 1px solid #ccc;
 }
 
-.forgot-password {
-    display: block;           /* makes it behave like a block-level element */
-    text-align: right;        /* aligns the text to the right */
-    margin-bottom: 15px;      /* space below the link */
-    text-decoration: none;    /* remove underline if you want */
-    color: #484848;           /* link color */
-    font-size: 14px;
+.forgot-password-container {
+  display: flex;
+  justify-content: space-between; /* pushes items to opposite sides */
+  align-items: center;            /* aligns vertically */
+  width: 100%;
+  white-space: nowrap;
 }
+
+.remember-me {
+  display: flex;
+  align-items: center; /* keeps checkbox & text on same baseline */
+  font-size: 14px;
+  gap: 6px;            /* small space between checkbox & text */
+}
+
+.remember-me input[type="checkbox"] {
+  transform: translateY(6px); /* subtle tweak (1–2px usually ideal) */
+}
+
+.forgot-password {
+  text-align: right;
+  text-decoration: none;
+  color: #484848;
+  font-size: 14px;
+}
+
 
 .account{
     display: block;           
