@@ -16,14 +16,32 @@
         {% csrf_token %}
           <h2>Campus RideShare</h2>
             <p class="subheader" >Login to your account</p>
-              {{form.as_p}}
+            <div class="form-group">
+              {{ form.email.label_tag }}
+              {{ form.email }}
+            </div>
+
+            <div class="form-group">
+              {{ form.password.label_tag }}
+              {{ form.password }}
+            </div>
+
             <div class="forgot-password-container">
+              <label class="remember-me"><input type="checkbox" name="subscribe" value="yes">Remember Me</label>
               <a class="forgot-password" href="">Forgot Password?</a>
             </div>
             <button id="button" type="submit">Login</button>
-            {% if error %}
-              <p class="error-message">{{ error }}</p>
-            {% endif %}
+            <div>
+                {% for error in form.password.errors %}
+                    <p class="error-message">{{ error }}</p>
+                  {% endfor %}
+                {% for error in form.email.errors %}
+                    <p class="error-message">{{ error }}</p>
+                  {% endfor %}
+                {% if error %}
+                  <p class="error-message">{{ error }}</p>
+                {% endif %}
+            </div>
       </form>
 
       <h4 class="account">Don't have an account? <a class="register-link" href="{%url 'register'%}">Register</a></h4>
