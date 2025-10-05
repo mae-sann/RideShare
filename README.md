@@ -1,4 +1,4 @@
-# 🚗 CampusRideShare  
+# 🚗 Campus RideShare  
 
 **Campus RideShare**  is a web-based application designed exclusively for **CIT-U students**, providing a safe, affordable, and eco-friendly carpooling solution. 
 
