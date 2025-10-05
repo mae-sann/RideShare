@@ -12,12 +12,10 @@ def login(request):
         password = form.cleaned_data['password']
 
         try:
-            # Get the User object linked to this email
             user_obj = User.objects.get(email=email)
-            # Authenticate using username (Django default)
             user = authenticate(request, username=user_obj.username, password=password)
             if user is not None:
-                auth_login(request, user)  # logs the user in
+                auth_login(request, user)
                 return redirect('dashboard')
             else:
                 error = "Invalid email or password."

@@ -6,7 +6,6 @@ from .models import RideShareUser
 def register(request):
     form = UserRegisterForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
-        # Create the User
         user = User.objects.create_user(
             username=form.cleaned_data['email'],
             email=form.cleaned_data['email'],
@@ -14,7 +13,6 @@ def register(request):
             first_name=form.cleaned_data['first_name'],
             last_name=form.cleaned_data['last_name']
         )
-        # Create the RideShareUser profile
         RideShareUser.objects.create(
             user=user,
             phone=form.cleaned_data['phone'],

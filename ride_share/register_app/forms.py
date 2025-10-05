@@ -53,6 +53,9 @@ class UserRegisterForm(forms.Form):
         pattern = r'^\d{2}-\d{4}-\d{3}$'
         if not re.match(pattern, student_id):
             raise forms.ValidationError("Student ID must follow format.")
+        from register_app.models import RideShareUser
+        if RideShareUser.objects.filter(student_id=student_id).exists():
+            raise forms.ValidationError("Student ID already registered.")
         return student_id
         
     def clean_password(self):
@@ -78,4 +81,4 @@ class UserRegisterForm(forms.Form):
         password = cleaned_data.get("password")
         confirm = cleaned_data.get("confirm")
         if password and confirm and password != confirm:
-            self.add_error('confirm', "Passwords do not match.")    
+            self.add_error('confirm', "Passwords do not match.")
