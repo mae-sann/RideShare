@@ -30,6 +30,13 @@ body {
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
 }
 
+.container img {
+  display: block;
+  margin: 0 auto 20px auto; /* centers the image and adds bottom spacing */
+  width: 56px; /* adjust this to your desired size */
+  height: 56px;
+}
+
 /* Form heading */
 .container h2 {
     text-align: center;
@@ -103,3 +110,27 @@ button:hover {
     font-weight: bold;
 }
 
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 35px; /* space for icon */
+}
+
+.toggle-password {
+  position: absolute;
+  top: 2px;
+  right: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 18px;
+  color: #767676;
+}
+
+.toggle-password:hover {
+  color: #000;
+}
