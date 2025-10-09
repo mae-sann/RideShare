@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus RideShare - Welcome</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 20px 100px;
+            position: relative;
+        }
+
+        .hero-section h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-section .tagline {
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Features Section */
+        .features-section {
+            background-color: #ffffff;
+            padding: 80px 20px;
+        }
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .features-header h2 {
+            font-size: 36px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 16px;
+        }
+
+        .features-header p {
+            font-size: 16px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #1a1a1a;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 36px;
+            }
+
+            .hero-section .tagline {
+                font-size: 16px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .features-header h2 {
+                font-size: 28px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1>Campus RideShare</h1>
+        <p class="tagline">
+            Connect with fellow students for safe, affordable, and eco-friendly rides.<br>
+            Share the journey, share the costs, make new friends.
+        </p>
+        <div class="button-group">
+            <a href="{% url 'login' %}" class="btn btn-primary">Get Started</a>
+            <a href="{% url 'register' %}" class="btn btn-secondary">Sign Up</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="features-header">
+            <h2>Why Choose Campus RideShare?</h2>
+            <p>Built specifically for students, by students. Safe, affordable, and sustainable transportation.</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Student Community</h3>
+                <p>Connect with verified students from your university. Build friendships while commuting.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Safe & Secure</h3>
+                <p>Verified student profiles, ratings, and secure communication for peace of mind.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🌱</div>
+                <h3>Eco-Friendly</h3>
+                <p>Reduce carbon footprint by sharing rides. Save money while helping the environment.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        © 2025 Campus RideShare — All rights reserved.
+    </footer>
+</body>
+</html>

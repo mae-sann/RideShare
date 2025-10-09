@@ -59,13 +59,16 @@
                 <div class="menu" role="menu">
                     <a href="#" role="menuitem"><i class="fa-regular fa-user"></i><span>Profile</span></a>
                     <a href="#" role="menuitem"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
-                    <a href="#" class="danger" role="menuitem"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+                    <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="danger logout-btn" role="menuitem">
+                            <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </aside>
-
-    <!-- Main Content -->
     <main class="main-content">
         <header class="topbar">
             <div class="left">
@@ -76,28 +79,13 @@
                 </div>
             </div>
             <div class="right">
-                <button class="btn btn-primary">
-                    <i class="fa-solid fa-square-plus"></i>
-                    <span>Post a Ride</span>
-                </button>
-                <button class="btn btn-secondary">
-                    <i class="fa-solid fa-magnifying-glass-location"></i>
-                    <span>Find Rides</span>
-                </button>
                 <button class="icon-btn" aria-label="Notifications">
                     <i class="fa-regular fa-bell"></i>
                     <span class="dot" aria-hidden="true"></span>
                 </button>
-                <div class="mini-profile" tabindex="0">
-                    <div class="mini-avatar">{{ user.first_name|default:"S"|slice:":1" }}</div>
-                    <div class="mini-menu" role="menu">
-                        <a href="#" role="menuitem">Profile</a>
-                        <a href="#" role="menuitem">Settings</a>
-                        <a href="#" class="danger" role="menuitem">Logout</a>
-                    </div>
-                </div>
             </div>
         </header>
+
 
         <!-- KPI Cards -->
         <section class="kpis">
@@ -181,5 +169,6 @@
     </main>
 
 </div>
+
 </body>
 </html>

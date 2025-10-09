@@ -1,5 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def dashboard(request):
     kpis = {
         "total_rides": 24,
@@ -24,3 +28,13 @@ def dashboard(request):
         "recent_activity": recent_activity,
     }
     return render(request, "dashboard_app/dashboard.html", context)
+
+@login_required
+def logout_view(request):
+    """Handle user logout"""
+    if request.method == 'POST':
+        logout(request)
+        messages.success(request, "You have been successfully logged out.")
+        return redirect('landing')
+    # If GET request, redirect to dashboard
+    return redirect('dashboard')
