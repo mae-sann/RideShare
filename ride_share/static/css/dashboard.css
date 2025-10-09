@@ -68,10 +68,10 @@ body {
 .profile:focus-within .chevron, .profile:hover .chevron { transform: rotate(180deg); }
 .menu { position: absolute; left: 0; right: 0; bottom: calc(100% + 8px); background: #0b1220; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; box-shadow: var(--shadow-md); padding: 8px; opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity var(--transition), visibility var(--transition), transform var(--transition); z-index: 3; }
 .profile:focus-within .menu, .profile:hover .menu { opacity: 1; visibility: visible; transform: translateY(0); }
-.menu a { display: flex; align-items: center; gap: 10px; color: #cbd5e1; text-decoration: none; padding: 10px; border-radius: 8px; transition: background var(--transition), color var(--transition); }
-.menu a:hover { background: rgba(255,255,255,0.06); color: #fff; }
-.menu a.danger { color: #fecaca; }
-.menu a.danger:hover { background: rgba(239, 68, 68, 0.1); }
+.menu a, .menu .logout-btn { display: flex; align-items: center; gap: 10px; color: #cbd5e1; text-decoration: none; padding: 10px; border-radius: 8px; transition: background var(--transition), color var(--transition); border: none; background: transparent; cursor: pointer; font: inherit; width: 100%; text-align: left; }
+.menu a:hover, .menu .logout-btn:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.menu a.danger, .menu .logout-btn.danger { color: #fecaca; }
+.menu a.danger:hover, .menu .logout-btn.danger:hover { background: rgba(239, 68, 68, 0.1); }
 
 /* Collapse behavior (CSS-only) */
 #nav-toggle:checked ~ .container .sidebar { width: 88px; }

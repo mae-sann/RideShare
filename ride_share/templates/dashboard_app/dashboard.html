@@ -59,7 +59,12 @@
                 <div class="menu" role="menu">
                     <a href="#" role="menuitem"><i class="fa-regular fa-user"></i><span>Profile</span></a>
                     <a href="#" role="menuitem"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
-                    <a href="{% url 'logout' %}" class="danger" role="menuitem"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+                    <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="danger logout-btn" role="menuitem">
+                            <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

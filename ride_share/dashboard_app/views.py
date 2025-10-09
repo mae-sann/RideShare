@@ -29,9 +29,12 @@ def dashboard(request):
     }
     return render(request, "dashboard_app/dashboard.html", context)
 
+@login_required
 def logout_view(request):
-    print(f"Logout view called by user: {request.user}")
-    logout(request)
-    messages.success(request, "You have been successfully logged out.")
-    print("User logged out, redirecting to landing page")
-    return redirect('landing')
+    """Handle user logout"""
+    if request.method == 'POST':
+        logout(request)
+        messages.success(request, "You have been successfully logged out.")
+        return redirect('landing')
+    # If GET request, redirect to dashboard
+    return redirect('dashboard')
