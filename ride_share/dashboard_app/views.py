@@ -29,7 +29,10 @@ def dashboard(request):
     }
     return render(request, "dashboard_app/dashboard.html", context)
 
+
+@login_required
 def logout_view(request):
+    """Handle user logout and redirect to landing page"""
     print(f"Logout view called by user: {request.user}")
     logout(request)
     messages.success(request, "You have been successfully logged out.")
