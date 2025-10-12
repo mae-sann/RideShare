@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.landing_page, name='landing'),
     path('landing/', views.landing_page, name='landing_page'),
+    path('accounts/', include('accounts_app.urls')),
     path('login/', include('login_app.urls')),
     path('register/', include('register_app.urls')),
     path('dashboard/', include('dashboard_app.urls')),
