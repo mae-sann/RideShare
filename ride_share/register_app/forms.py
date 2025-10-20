@@ -40,6 +40,28 @@ class UserRegisterForm(forms.Form):
             raise forms.ValidationError("Email already registered.")
         return email
 
+    def clean_student_id(self):
+        student_id = self.cleaned_data['student_id']
+        pattern = r'^\d{2}-\d{4}-\d{3}$'
+        if not re.match(pattern, student_id):
+            raise forms.ValidationError("Student ID must follow format.")
+        from register_app.models import RideShareUser
+        if RideShareUser.objects.filter(student_id=student_id).exists():
+            raise forms.ValidationError("Student ID already registered.")
+        return student_id
+
+    def clean_first_name(self):
+        firstname = self.cleaned_data['first_name']
+        if any(ch.isdigit() for ch in firstname):
+            raise forms.ValidationError("Firstname must not contain digits.")
+        return firstname
+
+    def clean_last_name(self):
+        lastname = self.cleaned_data['last_name']
+        if any(ch.isdigit() for ch in lastname):
+            raise forms.ValidationError("Lastname must not contain digits.")
+        return lastname
+
     def clean_phone(self):
         phone_number = self.cleaned_data['phone']
         if not phone_number.startswith("+63"):
