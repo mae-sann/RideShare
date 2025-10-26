@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RideShare Dashboard</title>
+    <title>{% block title %}RideShare Dashboard {% endblock %}</title>
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<input type="checkbox" id="nav-toggle" aria-hidden="true">
+<!-- <input type="checkbox" id="nav-toggle" aria-hidden="true"> -->
 <div class="container">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -27,15 +27,15 @@
             <span class="brand-text">Campus RideShare</span>
         </div>
         <nav class="nav">
-            <a href="#" class="nav-item active">
+            <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"><!--switches what active option is to highlight (dashboard, findrides, postride)-->
                 <i class="fa-solid fa-gauge"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="{% url 'find_rides' %}" class="nav-item">
+            <a href="{% url 'find_rides' %}" class="nav-item {% if request.resolver_match.url_name == 'find_rides' %}active{% endif %}">
                 <i class="fa-solid fa-magnifying-glass-location"></i>
                 <span>Find Rides</span>
             </a>
-            <a href="{% url 'post_ride' %}" class="nav-item">
+            <a href="{% url 'post_ride' %}" class="nav-item {% if request.resolver_match.url_name == 'post_ride' %}active{% endif %}">
                 <i class="fa-solid fa-square-plus"></i>
                 <span>Post a Ride</span>
             </a>
@@ -69,7 +69,9 @@
             </div>
         </div>
     </aside>
+
     <main class="main-content">
+        {% block content%}
         <header class="topbar">
             <div class="left">
                 <h1>Welcome back, {{ user.first_name|default:'Student' }}!</h1>
@@ -166,6 +168,7 @@
                 </ul>
             </div>
         </section>
+        {% endblock %}
     </main>
 
 </div>

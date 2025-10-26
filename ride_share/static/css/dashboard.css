@@ -19,30 +19,54 @@
 
 /* Base */
 * { box-sizing: border-box; }
-html, body { height: 100%; }
+html { height: 100%; overflow: hidden;}/* added overflow to prevent sidebar scrolling django MVT fix*/
 body {
 	margin: 0;
 	font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 	background: var(--color-bg);
 	color: var(--color-text);
 	line-height: 1.5;
+	position: fixed; /* Lock body - prevents page scroll, only main-content scrolls */
+	height: 100vh;
+	overflow: hidden;
 }
-.container { display: flex; min-height: 100vh; }
+
+.container { 
+	display: flex; 
+	min-height: 100vh;
+}
 
 /* Sidebar */
 .sidebar {
 	width: 260px;
-	background: #0f172a; /* slate-900 */
+	background: #0f172a;
 	color: #e5e7eb;
 	padding: 20px;
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
-	position: sticky;
+	position: fixed; /* Keep sidebar fixed in viewport */
 	top: 0;
-	min-height: 100vh;
+	left: 0;
+	height: 100vh;
+	overflow: hidden; /* Prevent sidebar scroll */
 	transition: width var(--transition);
 }
+
+/* Main */
+.main-content { 
+	flex: 1; 
+	padding: 20px; 
+	display: flex; 
+	flex-direction: column; 
+	gap: 20px; 
+	margin-left: 260px; /* Offset for fixed sidebar */
+	height: 100vh;
+	margin-left: 260px; /* Offset for fixed sidebar */
+	width: calc(100vw - 260px); /* Use full remaining width */
+	overflow-y: auto; /* Only main content scrolls vertically */
+}
+
 .brand { display: flex; align-items: center; gap: 12px; }
 .hamburger { display: none; color: #cbd5e1; cursor: pointer; padding: 8px; border-radius: 8px; }
 .hamburger:hover { background: rgba(255,255,255,0.06); }
@@ -73,16 +97,13 @@ body {
 .menu a.danger, .menu .logout-btn.danger { color: #fecaca; }
 .menu a.danger:hover, .menu .logout-btn.danger:hover { background: rgba(239, 68, 68, 0.1); }
 
-/* Collapse behavior (CSS-only) */
+/* Collapse behavior (CSS-only)
 #nav-toggle:checked ~ .container .sidebar { width: 88px; }
 #nav-toggle:checked ~ .container .brand-text { display: none; }
 #nav-toggle:checked ~ .container .nav-item span { display: none; }
 #nav-toggle:checked ~ .container .profile { grid-template-columns: 44px; justify-items: center; }
 #nav-toggle:checked ~ .container .profile .details, 
-#nav-toggle:checked ~ .container .profile .chevron { display: none; }
-
-/* Main */
-.main-content { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+#nav-toggle:checked ~ .container .profile .chevron { display: none; } */
 
 /* Topbar */
 .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
