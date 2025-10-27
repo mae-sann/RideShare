@@ -65,262 +65,70 @@
             <!-- Results Header -->
             <div class="results-header">
                 <h2>Available Rides</h2>
-                <span class="results-count" id="resultsCount">Showing 5 rides</span>
+                <span class="results-count" id="resultsCount">
+                    {% if rides %}
+                    Showing {{rides|length}} rides 
+                    {% else %}
+                    No rides found
+                    {% endif %}</span>
             </div>
 
             <!-- Rides Grid -->
             <div class="rides-grid" id="ridesGrid">
-                <!-- Ride Card 1 -->
-                <div class="ride-card">
-                    <div class="ride-info">
-                        <div class="ride-header">
-                            <div class="driver-avatar">MJ</div>
-                            <div class="driver-details">
-                                <div class="driver-name">Maria Johnson</div>
-                                <span class="vehicle-badge">
-                                    <i class="fa-solid fa-car"></i>
-                                    Car
-                                </span>
+                <!-- Ride Card -->
+                 {% if rides%}
+                    {% for ride in rides %}
+                    <div class="ride-card">
+                        <div class="ride-info">
+                            <div class="ride-header">
+                                <div class="driver-avatar">{{ ride.driver.first_name|slice:":1" }}{{ ride.driver.last_name|slice:":1" }}</div><!--get initials-->
+                                <div class="driver-details">
+                                    <div class="driver-name">{{ ride.driver.get_full_name }}</div>
+                                    <span class="vehicle-badge">
+                                        <i class="fa-solid fa-car"></i>
+                                        Car
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="ride-route">
+                                <div class="location">
+                                    <span class="location-label">From</span>
+                                    <span class="location-name">{{ride.origin}}</span>
+                                </div>
+                                <i class="fa-solid fa-arrow-right route-arrow"></i>
+                                <div class="location">
+                                    <span class="location-label">To</span>
+                                    <span class="location-name">{{ride.destination}}</span>
+                                </div>
+                            </div>
+
+                            <div class="ride-meta">
+                                <div class="meta-item">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <span>{{ride.start_date}}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fa-regular fa-clock"></i>
+                                    <span>{{ride.start_time}}</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="ride-route">
-                            <div class="location">
-                                <span class="location-label">From</span>
-                                <span class="location-name">Upper Greenbelt</span>
+                        <div class="ride-actions">
+                            <div class="seats-available">
+                                <i class="fa-solid fa-user-group"></i>
+                                <span>{{ride.seats_available}} seats left</span>
                             </div>
-                            <i class="fa-solid fa-arrow-right route-arrow"></i>
-                            <div class="location">
-                                <span class="location-label">To</span>
-                                <span class="location-name">CIT-U Front Gate</span>
-                            </div>
-                        </div>
-
-                        <div class="ride-meta">
-                            <div class="meta-item">
-                                <i class="fa-regular fa-calendar"></i>
-                                <span>Oct 13, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fa-regular fa-clock"></i>
-                                <span>7:30 AM</span>
-                            </div>
+                            <button class="btn-request">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                Request Ride
+                            </button>
                         </div>
                     </div>
-
-                    <div class="ride-actions">
-                        <div class="seats-available">
-                            <i class="fa-solid fa-user-group"></i>
-                            <span>3 seats left</span>
-                        </div>
-                        <button class="btn-request">
-                            <i class="fa-solid fa-paper-plane"></i>
-                            Request Ride
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Ride Card 2 -->
-                <div class="ride-card">
-                    <div class="ride-info">
-                        <div class="ride-header">
-                            <div class="driver-avatar">JD</div>
-                            <div class="driver-details">
-                                <div class="driver-name">John Dela Cruz</div>
-                                <span class="vehicle-badge">
-                                    <i class="fa-solid fa-motorcycle"></i>
-                                    Motorcycle
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="ride-route">
-                            <div class="location">
-                                <span class="location-label">From</span>
-                                <span class="location-name">Basak</span>
-                            </div>
-                            <i class="fa-solid fa-arrow-right route-arrow"></i>
-                            <div class="location">
-                                <span class="location-label">To</span>
-                                <span class="location-name">CIT-U Main Campus</span>
-                            </div>
-                        </div>
-
-                        <div class="ride-meta">
-                            <div class="meta-item">
-                                <i class="fa-regular fa-calendar"></i>
-                                <span>Oct 13, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fa-regular fa-clock"></i>
-                                <span>8:00 AM</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ride-actions">
-                        <div class="seats-available">
-                            <i class="fa-solid fa-user-group"></i>
-                            <span>1 seat left</span>
-                        </div>
-                        <button class="btn-request">
-                            <i class="fa-solid fa-paper-plane"></i>
-                            Request Ride
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Ride Card 3 -->
-                <div class="ride-card">
-                    <div class="ride-info">
-                        <div class="ride-header">
-                            <div class="driver-avatar">AS</div>
-                            <div class="driver-details">
-                                <div class="driver-name">Anna Santos</div>
-                                <span class="vehicle-badge">
-                                    <i class="fa-solid fa-car"></i>
-                                    Car
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="ride-route">
-                            <div class="location">
-                                <span class="location-label">From</span>
-                                <span class="location-name">Ayala Center</span>
-                            </div>
-                            <i class="fa-solid fa-arrow-right route-arrow"></i>
-                            <div class="location">
-                                <span class="location-label">To</span>
-                                <span class="location-name">CIT-U Back Gate</span>
-                            </div>
-                        </div>
-
-                        <div class="ride-meta">
-                            <div class="meta-item">
-                                <i class="fa-regular fa-calendar"></i>
-                                <span>Oct 14, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fa-regular fa-clock"></i>
-                                <span>6:45 AM</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ride-actions">
-                        <div class="seats-available">
-                            <i class="fa-solid fa-user-group"></i>
-                            <span>2 seats left</span>
-                        </div>
-                        <button class="btn-request">
-                            <i class="fa-solid fa-paper-plane"></i>
-                            Request Ride
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Ride Card 4 -->
-                <div class="ride-card">
-                    <div class="ride-info">
-                        <div class="ride-header">
-                            <div class="driver-avatar">RL</div>
-                            <div class="driver-details">
-                                <div class="driver-name">Rico Lopez</div>
-                                <span class="vehicle-badge">
-                                    <i class="fa-solid fa-car"></i>
-                                    Car
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="ride-route">
-                            <div class="location">
-                                <span class="location-label">From</span>
-                                <span class="location-name">Lahug</span>
-                            </div>
-                            <i class="fa-solid fa-arrow-right route-arrow"></i>
-                            <div class="location">
-                                <span class="location-label">To</span>
-                                <span class="location-name">CIT-U Front Gate</span>
-                            </div>
-                        </div>
-
-                        <div class="ride-meta">
-                            <div class="meta-item">
-                                <i class="fa-regular fa-calendar"></i>
-                                <span>Oct 14, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fa-regular fa-clock"></i>
-                                <span>7:15 AM</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ride-actions">
-                        <div class="seats-available">
-                            <i class="fa-solid fa-user-group"></i>
-                            <span>4 seats left</span>
-                        </div>
-                        <button class="btn-request">
-                            <i class="fa-solid fa-paper-plane"></i>
-                            Request Ride
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Ride Card 5 -->
-                <div class="ride-card">
-                    <div class="ride-info">
-                        <div class="ride-header">
-                            <div class="driver-avatar">LT</div>
-                            <div class="driver-details">
-                                <div class="driver-name">Lisa Tan</div>
-                                <span class="vehicle-badge">
-                                    <i class="fa-solid fa-motorcycle"></i>
-                                    Motorcycle
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="ride-route">
-                            <div class="location">
-                                <span class="location-label">From</span>
-                                <span class="location-name">Capitol Site</span>
-                            </div>
-                            <i class="fa-solid fa-arrow-right route-arrow"></i>
-                            <div class="location">
-                                <span class="location-label">To</span>
-                                <span class="location-name">CIT-U Main Campus</span>
-                            </div>
-                        </div>
-
-                        <div class="ride-meta">
-                            <div class="meta-item">
-                                <i class="fa-regular fa-calendar"></i>
-                                <span>Oct 15, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fa-regular fa-clock"></i>
-                                <span>8:30 AM</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ride-actions">
-                        <div class="seats-available">
-                            <i class="fa-solid fa-user-group"></i>
-                            <span>1 seat left</span>
-                        </div>
-                        <button class="btn-request">
-                            <i class="fa-solid fa-paper-plane"></i>
-                            Request Ride
-                        </button>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
-
+            {% else %}
             <!-- No Results Message (Hidden by default) -->
             <div class="no-results" id="noResults">
                 <div class="no-results-icon">
@@ -329,6 +137,7 @@
                 <h3>No Rides Available</h3>
                 <p>We couldn't find any rides matching your search criteria. Try adjusting your filters or check back later.</p>
             </div>
+            {% endif %}
         </div>
     {% endblock %}
 

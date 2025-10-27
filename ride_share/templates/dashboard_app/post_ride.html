@@ -26,22 +26,15 @@
     <!-- Form Card -->
     <div class="form-card">
         <form id="postRideForm" method="POST" action="#">
-            {% csrf_token %}
+            {% csrf_token %}<!--Match input name to form fields name-->
             
             <!-- Pickup Location -->
             <div class="form-group">
                 <label for="pickupLocation">
                     <i class="fa-solid fa-location-dot"></i>
-                    Pickup Location
+                    {{form.origin.label}}
                 </label>
-                <input 
-                    type="text" 
-                    id="pickupLocation" 
-                    name="pickup_location" 
-                    class="form-control" 
-                    placeholder="e.g., Upper Greenbelt, Basak"
-                    required
-                >
+                {{form.origin }}
                 <div class="helper-text">
                     <i class="fa-solid fa-circle-info"></i>
                     Enter the starting point of your ride
@@ -52,16 +45,9 @@
             <div class="form-group">
                 <label for="destination">
                     <i class="fa-solid fa-flag-checkered"></i>
-                    Destination
+                    {{form.destination.label}}
                 </label>
-                <input 
-                    type="text" 
-                    id="destination" 
-                    name="destination" 
-                    class="form-control" 
-                    placeholder="e.g., CIT-U Front Gate"
-                    required
-                >
+                {{form.destination}}
                 <div class="helper-text">
                     <i class="fa-solid fa-circle-info"></i>
                     Where are you heading?
@@ -75,13 +61,7 @@
                         <i class="fa-regular fa-calendar"></i>
                         Date
                     </label>
-                    <input 
-                        type="date" 
-                        id="rideDate" 
-                        name="ride_date" 
-                        class="form-control"
-                        required
-                    >
+                    {{form.start_date}}
                 </div>
 
                 <div class="form-group">
@@ -89,13 +69,7 @@
                         <i class="fa-regular fa-clock"></i>
                         Time
                     </label>
-                    <input 
-                        type="time" 
-                        id="rideTime" 
-                        name="ride_time" 
-                        class="form-control"
-                        required
-                    >
+                    {{form.start_time}}
                 </div>
             </div>
 
@@ -104,16 +78,7 @@
                 <label for="availableSeats">
                     Available Seats
                 </label>
-                <input 
-                    type="number" 
-                    id="availableSeats" 
-                    name="available_seats" 
-                    class="form-control" 
-                    placeholder="e.g., 1"
-                    min="1"
-                    max="10"
-                    required
-                >
+                {{form.seats_available}}
                 <div class="helper-text">
                     <i class="fa-solid fa-circle-info"></i>
                     How many passengers can you accommodate?
@@ -170,7 +135,6 @@
 
     // Form submission handler (placeholder for future backend integration)
     document.getElementById('postRideForm').addEventListener('submit', function(e) {
-        e.preventDefault();
         
         // Show success alert (placeholder)
         const alertArea = document.getElementById('alertArea');
