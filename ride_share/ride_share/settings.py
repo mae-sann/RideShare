@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'register_app',
     'dashboard_app',
     'accounts_app',
+    'ride_app',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +84,8 @@ WSGI_APPLICATION = 'ride_share.wsgi.application'
 
 DATABASES = {
     'default': {
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('SUPABASE_DB_NAME'),
         'USER': os.environ.get('SUPABASE_DB_USER'),

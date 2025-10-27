@@ -30,18 +30,6 @@ def dashboard(request):
 
 
 @login_required
-def post_ride(request):
-    """Render the post ride page"""
-    return render(request, "dashboard_app/post_ride.html")
-
-
-@login_required
-def find_rides(request):
-    """Render the find rides page"""
-    return render(request, "dashboard_app/find_rides.html")
-
-
-@login_required
 def logout_view(request):
     """Handle user logout and redirect to landing page"""
     print(f"Logout view called by user: {request.user}")

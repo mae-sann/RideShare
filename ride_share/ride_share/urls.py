@@ -26,4 +26,5 @@ urlpatterns = [
     path('login/', include('login_app.urls')),
     path('register/', include('register_app.urls')),
     path('dashboard/', include('dashboard_app.urls')),
+    path('ride/', include ('ride_app.urls')),
 ]
