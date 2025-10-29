@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-p(6)9=fz(ad9wz2w-2huqgnty9a--63j+i87bxy=+yy)zc54vb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["https://rideshare-nxo3.onrender.com"]
+ALLOWED_HOSTS = ["rideshare-nxo3.onrender.com"]
 
 
 # Application definition
