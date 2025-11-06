@@ -27,18 +27,18 @@ def find_rides(request):
     """Render the find rides page"""
     rides = Ride.objects.filter(status='open').order_by('start_date', 'start_time')
 
-    #Optional filter
-    # pickup = request.GET.get('pickup')
-    # destination = request.GET.get('destination')
-    # date = request.GET.get('date')
+    # Optional filter
+    origin = request.GET.get('origin')
+    destination = request.GET.get('destination')
+    date = request.GET.get('date')
     # vehicle = request.GET.get('vehicle')
 
 
-    # #For ride matching
-    # if pickup:
-    #     rides = rides.filter(origin__icontains=pickup)
-    # if destination:
-    #     rides = rides.filter(destination__icontains=destination)
-    # if date:
-    #     rides = rides.filter(start_date=date)
+    #For ride matching
+    if origin:
+        rides = rides.filter(origin__icontains=origin)
+    if destination:
+        rides = rides.filter(destination__icontains=destination)
+    if date:
+        rides = rides.filter(start_date=date)
     return render(request, "dashboard_app/find_rides.html", {'rides':rides})

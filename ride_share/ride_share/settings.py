@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-p(6)9=fz(ad9wz2w-2huqgnty9a--63j+i87bxy=+yy)zc54vb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["rideshare-nxo3.onrender.com"]
+ALLOWED_HOSTS = ["rideshare-nxo3.onrender.com","127.0.0.1"]
 
 
 # Application definition
@@ -86,14 +86,14 @@ WSGI_APPLICATION = 'ride_share.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('SUPABASE_DB_NAME'),
-        'USER': os.environ.get('SUPABASE_DB_USER'),
-        'PASSWORD': os.environ.get('SUPABASE_DB_PASSWORD'),
-        'HOST': os.environ.get('SUPABASE_DB_HOST'),
-        'PORT': os.environ.get('SUPABASE_DB_PORT', '5432'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': os.environ.get('SUPABASE_DB_NAME'),
+        # 'USER': os.environ.get('SUPABASE_DB_USER'),
+        # 'PASSWORD': os.environ.get('SUPABASE_DB_PASSWORD'),
+        # 'HOST': os.environ.get('SUPABASE_DB_HOST'),
+        # 'PORT': os.environ.get('SUPABASE_DB_PORT', '5432'),
     }
 }
 
