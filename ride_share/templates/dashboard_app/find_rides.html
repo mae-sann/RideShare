@@ -16,7 +16,7 @@
 
             <!-- Search Section -->
             <div class="search-card">
-                <form id="searchForm" class="search-form">
+                <form id="searchForm" class="search-form" method="get">
                     <div class="search-group">
                         <label for="searchPickup">Pickup Location</label>
                         <input 
@@ -24,6 +24,8 @@
                             id="searchPickup" 
                             class="search-input" 
                             placeholder="e.g., Upper Greenbelt"
+                            name="origin"
+                            value="{{ request.GET.origin }}"
                         >
                     </div>
 
@@ -34,6 +36,8 @@
                             id="searchDestination" 
                             class="search-input" 
                             placeholder="e.g., CIT-U Front Gate"
+                            name="destination"
+                            value="{{ request.GET.destination }}"
                         >
                     </div>
 
@@ -43,6 +47,8 @@
                             type="date" 
                             id="searchDate" 
                             class="search-input"
+                            name="date"
+                            value="{{ reqeust.GET.date }}"
                         >
                     </div>
 
@@ -120,7 +126,7 @@
                                 <i class="fa-solid fa-user-group"></i>
                                 <span>{{ride.seats_available}} seats left</span>
                             </div>
-                            <button class="btn-request">
+                            <button type="submit" class="btn-request">
                                 <i class="fa-solid fa-paper-plane"></i>
                                 Request Ride
                             </button>
