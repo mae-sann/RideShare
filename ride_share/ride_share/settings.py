@@ -11,13 +11,17 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 from pathlib import Path
-
 from dotenv import load_dotenv
+
+# Load environment variables
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Media files (user uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -28,7 +32,7 @@ SECRET_KEY = 'django-insecure-p(6)9=fz(ad9wz2w-2huqgnty9a--63j+i87bxy=+yy)zc54vb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["campusrideshare-cepm.onrender.com"]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 
 # Application definition
@@ -47,6 +51,7 @@ INSTALLED_APPS = [
     'dashboard_app',
     'accounts_app',
     'ride_app',
+    'profile_app'
 ]
 
 MIDDLEWARE = [
