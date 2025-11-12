@@ -27,4 +27,5 @@ urlpatterns = [
     path('register/', include('register_app.urls')),
     path('dashboard/', include('dashboard_app.urls')),
     path('ride/', include ('ride_app.urls')),
+    path('profile/', include ('profile_app.urls')),
 ]

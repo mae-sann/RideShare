@@ -49,7 +49,7 @@
             </a>
         </nav>
         <div class="account">
-            <div class="profile" tabindex="0">
+            <div class="profile">
                 <div class="avatar" aria-hidden="true">{{ user.first_name|default:"S"|slice:":1" }}</div>
                 <div class="details">
                     <div class="name">{{ user.first_name|default:'Student' }} {{ user.last_name|default:'' }}</div>
@@ -57,7 +57,7 @@
                 </div>
                 <i class="fa-solid fa-chevron-up chevron" aria-hidden="true"></i>
                 <div class="menu" role="menu">
-                    <a href="#" role="menuitem"><i class="fa-regular fa-user"></i><span>Profile</span></a>
+                    <a href="{% url 'profile' %}" role="menuitem"><i class="fa-regular fa-user"></i><span>Profile</span></a>
                     <a href="#" role="menuitem"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
                     <form method="POST" action="{% url 'logout' %}" style="display: inline;">
                         {% csrf_token %}
