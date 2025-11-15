@@ -7,7 +7,12 @@ from django.http import HttpResponse
 
 def send_verification_email(user):
     token_obj, created = EmailVerificationToken.objects.get_or_create(user=user)
-    verification_link = f"http://127.0.0.1:8000/accounts/verify/{token_obj.token}/"
+    
+    # Use production URL for deployed app
+    if settings.DEBUG:
+        verification_link = f"http://127.0.0.1:8000/accounts/verify/{token_obj.token}/"
+    else:
+        verification_link = f"https://rideshare-nxo3.onrender.com/accounts/verify/{token_obj.token}/"
 
     subject = "Verify your email"
     message = f"Hi {user.first_name} {user.last_name},\n\nPlease verify your email by clicking this link:\n{verification_link}\n\nThank you!"
@@ -15,7 +20,6 @@ def send_verification_email(user):
     recipient_list = [user.email]
 
     send_mail(subject, message, from_email, recipient_list)
-
 
 
 def verify_email(request, token):
@@ -29,7 +33,7 @@ def verify_email(request, token):
         user.is_active = True
         user.save()
         token_obj.delete()
-        return  redirect('login')
+        return redirect('login')
     else:
         return HttpResponse("⚠️ Link expired. Please register again.")
 
