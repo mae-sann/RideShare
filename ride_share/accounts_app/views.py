@@ -12,7 +12,7 @@ def send_verification_email(user):
 
     subject = "Verify your email"
     message = f"Hi {user.first_name} {user.last_name},\n\nPlease verify your email by clicking this link:\n{verification_link}\n\nThank you!"
-    from_email = settings.EMAIL_HOST_USER
+    from_email = settings.DEFAULT_FROM_EMAIL
     recipient_list = [user.email]
 
     send_mail(subject, message, from_email, recipient_list)
