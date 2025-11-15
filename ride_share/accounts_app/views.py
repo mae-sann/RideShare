@@ -16,6 +16,7 @@ def send_verification_email(user):
 
     # Email content
     subject = "Verify your email"
+
     html_content = f"""
 <p>Hi {user.first_name} {user.last_name},</p>
 <p>Please verify your email by clicking this link:</p>
@@ -26,6 +27,11 @@ def send_verification_email(user):
     # Must match your verified sender in SendGrid
     from_email = "auditormechole@gmail.com"
     to_email = user.email
+
+    message = f"Hi {user.first_name} {user.last_name},\n\nPlease verify your email by clicking this link:\n{verification_link}\n\nThank you!"
+    from_email = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [user.email]
+
 
     message = Mail(
         from_email=from_email,
