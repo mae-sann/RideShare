@@ -1,29 +1,36 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from .forms import UserRegisterForm
-from .models import RideShareUser
-from accounts_app.views import send_verification_email 
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from register_app.models import EmailVerificationToken
 
-def register(request):
-    form = UserRegisterForm(request.POST or None)
-    if request.method == "POST" and form.is_valid():
-        user = User.objects.create_user(
-            username=form.cleaned_data['email'],
-            email=form.cleaned_data['email'],
-            password=form.cleaned_data['password'],
-            first_name=form.cleaned_data['first_name'],
-            last_name=form.cleaned_data['last_name'],
-            is_active=False
-        )
-        RideShareUser.objects.create(
-            user=user,
-            phone=form.cleaned_data['phone'],
-            student_id=form.cleaned_data['student_id']
-        )
+def send_verification_email(user):
+    # Create or get a token
+    token_obj, created = EmailVerificationToken.objects.get_or_create(user=user)
+    verification_link = f"https://rideshare-nxo3.onrender.com/accounts/verify/{token_obj.token}/"
 
-        send_verification_email(user)
+    # Email content
+    subject = "Verify your email"
+    html_content = f"""
+<p>Hi {user.first_name} {user.last_name},</p>
+<p>Please verify your email by clicking this link:</p>
+<p><a href="{verification_link}">{verification_link}</a></p>
+<p>Thank you!</p>
+    """
 
-        return render(request, "register_app/verify_notice.html", {
-            "email": user.email
-        })
-    return render(request, "register_app/register.html", {"form": form})
+    # Must match your verified sender in SendGrid
+    from_email = "auditormechole@gmail.com"
+    to_email = user.email
+
+    message = Mail(
+        from_email=from_email,
+        to_emails=to_email,
+        subject=subject,
+        html_content=html_content
+    )
+
+    try:
+        sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
+        response = sg.send(message)
+        print(f"✅ Email sent! Status code: {response.status_code}")
+    except Exception as e:
+        print(f"❌ Error sending email: {e}")
