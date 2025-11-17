@@ -1,85 +1,150 @@
 {% extends 'dashboard_app/dashboard.html' %}
 {% load static %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Profile Settings{% endblock %}
 
 {% block content %}
 <div class="profile-container">
     <div class="profile-card">
+        <!-- Profile Header with Gradient Background -->
         <div class="profile-header">
-            <div class="avatar-upload-container">
-                <div class="profile-avatar-wrapper" id="profile-avatar">
-                    {% if user.profile.profile_picture_url %}
-                        <img src="{{ user.profile.profile_picture_url }}" alt="{{ user.get_full_name }}" class="profile-avatar">
-                    {% else %}
-                        <div class="avatar-fallback">
-                            {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+            <div class="header-background"></div>
+            <div class="header-content">
+                <div class="avatar-section">
+                    <div class="avatar-upload-container">
+                        <div class="profile-avatar-wrapper" id="profile-avatar">
+                            {% if profile_data.profile_picture_url %}
+                                <img src="{{ profile_data.profile_picture_url }}" alt="{{ user.get_full_name }}" class="profile-avatar" id="profile-avatar-img">
+                            {% else %}
+                                <div class="avatar-fallback" id="avatar-fallback">
+                                    {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                                </div>
+                            {% endif %}
+                            <div class="avatar-overlay">
+                                <div class="camera-icon-wrapper">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="camera-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                                <span class="change-text">Change Photo</span>
+                            </div>
                         </div>
-                    {% endif %}
-                    <div class="avatar-overlay">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="camera-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span>Change Photo</span>
+                        <!-- Loading Spinner -->
+                        <div class="upload-spinner" id="upload-spinner" style="display: none;">
+                            <div class="spinner"></div>
+                            <span>Uploading...</span>
+                        </div>
+                    </div>
+                    <!-- Separate form for profile picture upload -->
+                    <form method="post" enctype="multipart/form-data" id="picture-form" style="display: none;">
+                        {% csrf_token %}
+                        <input type="file" name="profile_picture" id="id_profile_picture" accept="image/jpeg,image/png">
+                    </form>
+                </div>
+                
+                <div class="profile-info">
+                    <h1 class="profile-title">{{ user.get_full_name|default:user.username }}</h1>
+                    <p class="profile-email">{{ user.email }}</p>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">Member since</span>
+                            <span class="stat-label">{{ user.date_joined|date:"M Y" }}</span>
+                        </div>
                     </div>
                 </div>
-                <form id="profile-picture-form" method="post" enctype="multipart/form-data" class="hidden">
-                    {% csrf_token %}
-                    <input type="file" name="profile_picture" id="id_profile_picture" accept="image/jpeg,image/png" class="hidden">
-                </form>
-            </div>
-            <div class="profile-header-content">
-                <h1 class="profile-title">Edit Profile</h1>
-                <p class="profile-email">{{ user.email }}</p>
             </div>
         </div>
 
+        <!-- Profile Content -->
         <div class="profile-content">
-            <form method="post" enctype="multipart/form-data" class="profile-form">
-                {% csrf_token %}
-                
-                {% if messages %}
-                <div class="messages">
-                    {% for message in messages %}
-                    <div class="message {{ message.tags }}">
+            <!-- Success/Error Messages -->
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="message alert alert-{{ message.tags }}">
+                    <div class="message-icon">
+                        {% if message.tags == 'success' %}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        {% endif %}
+                    </div>
+                    <div class="message-content">
                         {{ message }}
                     </div>
-                    {% endfor %}
                 </div>
-                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
 
-                <div class="form-row">
-                    <div class="form-group half-width">
-                        <label for="id_first_name">First Name</label>
-                        <input type="text" id="id_first_name" name="first_name" value="{{ user.first_name }}" class="form-control">
+            <!-- Main form for profile information -->
+            <form method="post" class="profile-form" id="main-profile-form">
+                {% csrf_token %}
+                
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="section-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        Personal Information
+                    </h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="id_first_name" class="form-label">
+                                First Name
+                                <span class="required">*</span>
+                            </label>
+                            <input type="text" id="id_first_name" name="first_name" value="{{ user.first_name }}" class="form-control" placeholder="Enter your first name">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_last_name" class="form-label">
+                                Last Name
+                                <span class="required">*</span>
+                            </label>
+                            <input type="text" id="id_last_name" name="last_name" value="{{ user.last_name }}" class="form-control" placeholder="Enter your last name">
+                        </div>
                     </div>
-                    <div class="form-group half-width">
-                        <label for="id_last_name">Last Name</label>
-                        <input type="text" id="id_last_name" name="last_name" value="{{ user.last_name }}" class="form-control">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="id_username" class="form-label">
+                                Username
+                                <span class="required">*</span>
+                            </label>
+                            <input type="text" id="id_username" name="username" value="{{ user.username }}" class="form-control" placeholder="Choose a username">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_phone" class="form-label">Phone Number</label>
+                            <input type="tel" id="id_phone" name="phone" value="{{ profile_data.phone_number|default:'' }}" class="form-control" placeholder="+1 (555) 000-0000">
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="id_username">Username</label>
-                    <input type="text" id="id_username" name="username" value="{{ user.username }}" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="id_phone">Phone Number</label>
-                    {{ profile_form.phone }}
-                    {% if profile_form.phone.errors %}
-                        <div class="error-message">{{ profile_form.phone.errors.0 }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label>Email</label>
-                    <div class="email-display">{{ user.email }}</div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <div class="email-display">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="email-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            {{ user.email }}
+                        </div>
+                        <small class="form-hint">Contact support to change your email address</small>
+                    </div>
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" name="update_profile" class="save-btn">Save Changes</button>
+                    <button type="button" class="cancel-btn" onclick="window.history.back()">Cancel</button>
+                    <button type="submit" name="update_profile" class="save-btn">
+                        <span class="btn-text">Save Changes</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </button>
                 </div>
             </form>
         </div>
@@ -90,43 +155,121 @@
 :root {
     --primary-color: #4361ee;
     --primary-hover: #3a56d4;
-    --text-color: #212529;
-    --text-muted: #6c757d;
-    --border-color: #e9ecef;
-    --input-bg: #ffffff;
-    --input-border: #ced4da;
-    --input-focus: rgba(67, 97, 238, 0.25);
-    --error-color: #dc3545;
+    --primary-light: #eef2ff;
+    --secondary-color: #6c757d;
     --success-color: #28a745;
-    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --warning-color: #ffc107;
+    --error-color: #dc3545;
+    --text-primary: #2d3748;
+    --text-secondary: #6c757d;
+    --text-muted: #a0aec0;
+    --border-color: #e2e8f0;
+    --border-light: #f1f5f9;
+    --background: #f8fafc;
+    --card-bg: #ffffff;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --radius: 12px;
+    --radius-lg: 16px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--background);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text-primary);
+    line-height: 1.6;
 }
 
 .profile-container {
     padding: 2rem 1rem;
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
+    min-height: 100vh;
 }
 
 .profile-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
     overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Header / top area color to match dashboard (purple → blue gradient) */
+.profile-card .profile-header,
 .profile-header {
+  background: linear-gradient(135deg, #5b21b6 0%, #6366f1 45%, #06b6d4 100%);
+  color: #ffffff;
+  padding: 2rem 1.5rem;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* Avatar outline to pop on the gradient */
+.profile-card .avatar,
+.profile-header .avatar {
+  border: 4px solid rgba(255,255,255,0.16);
+  box-shadow: 0 6px 18px rgba(11, 14, 31, 0.12);
+}
+
+/* Lighter subtitle text on header (email) */
+.profile-card .profile-header .subtitle,
+.profile-header .subtitle {
+  color: rgba(255,255,255,0.85);
+  font-weight: 500;
+}
+
+/* If your markup uses .card-header or .profile-top, include fallback selectors */
+.card-header, .profile-top {
+  background: linear-gradient(135deg, #5b21b6 0%, #6366f1 45%, #06b6d4 100%);
+  color: #fff;
+}
+
+.profile-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Profile Header */
+.profile-header {
+    position: relative;
+    background: var(--gradient);
+    padding: 3rem 2rem 2rem;
+    color: white;
+}
+
+.header-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient);
+    opacity: 0.95;
+}
+
+.header-content {
+    position: relative;
     display: flex;
     align-items: center;
-    padding: 2rem;
-    background: #f8fafc;
-    border-bottom: 1px solid var(--border-color);
-    gap: 2rem;
+    gap: 2.5rem;
+}
+
+.avatar-section {
+    position: relative;
 }
 
 .avatar-upload-container {
     position: relative;
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
 }
 
 .profile-avatar-wrapper {
@@ -135,15 +278,22 @@
     border-radius: 50%;
     overflow: hidden;
     position: relative;
-    border: 3px solid white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    background-color: #f1f5f9;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease;
+}
+
+.profile-avatar-wrapper:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
 }
 
 .profile-avatar-wrapper:hover .avatar-overlay {
     opacity: 1;
+    transform: translateY(0);
 }
 
 .profile-avatar {
@@ -158,10 +308,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    font-size: 2.5rem;
-    font-weight: 600;
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -1px;
 }
 
 .avatar-overlay {
@@ -170,176 +321,408 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: white;
     opacity: 0;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease;
+    transform: translateY(10px);
     border-radius: 50%;
 }
 
-.avatar-overlay .camera-icon {
+.camera-icon-wrapper {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    padding: 12px;
+    margin-bottom: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.camera-icon {
     width: 24px;
     height: 24px;
-    margin-bottom: 0.5rem;
 }
 
-.avatar-overlay span {
-    font-size: 0.75rem;
-    font-weight: 500;
+.change-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
 }
 
-.profile-header-content {
+.upload-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1rem;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow);
+    z-index: 10;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Profile Info */
+.profile-info {
     flex: 1;
 }
 
 .profile-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-color);
+    font-size: 2.25rem;
+    font-weight: 800;
     margin: 0 0 0.5rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .profile-email {
-    color: var(--text-muted);
-    margin: 0;
-    font-size: 0.9375rem;
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0 0 1.5rem 0;
+    font-weight: 500;
 }
 
+.profile-stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* Profile Content */
 .profile-content {
-    padding: 2rem;
+    padding: 3rem;
+}
+
+.messages-container {
+    margin-bottom: 2rem;
+}
+
+.message {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.message.success {
+    background: #f0f9ff;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+}
+
+.message.error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.message-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.icon {
+    width: 100%;
+    height: 100%;
+}
+
+/* Form Sections */
+.form-section {
+    margin-bottom: 2.5rem;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-light);
+}
+
+.section-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--primary-color);
 }
 
 .form-row {
-    display: flex;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
     margin-bottom: 1.5rem;
 }
 
 .form-group {
     margin-bottom: 1.5rem;
-    flex: 1;
 }
 
-.form-group.half-width {
-    flex: 0 0 calc(50% - 0.5rem);
-}
-
-.form-group label {
+.form-label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--text-color);
-    font-weight: 500;
+    color: var(--text-primary);
+    font-weight: 600;
     font-size: 0.9rem;
+}
+
+.required {
+    color: var(--error-color);
 }
 
 .form-control {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--input-border);
-    border-radius: 8px;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
     font-size: 1rem;
-    color: var(--text-color);
-    background-color: var(--input-bg);
-    transition: all 0.2s ease-in-out;
+    color: var(--text-primary);
+    background: var(--card-bg);
+    transition: all 0.2s ease;
+    font-family: inherit;
 }
 
 .form-control:focus {
-    border-color: var(--primary-color);
     outline: none;
-    box-shadow: 0 0 0 0.2rem var(--input-focus);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
 }
 
 .email-display {
-    padding: 0.75rem 1rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: var(--background);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.email-icon {
+    width: 18px;
+    height: 18px;
     color: var(--text-muted);
-    font-size: 0.95rem;
+}
+
+.form-hint {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.cancel-btn {
+    padding: 0.875rem 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+    border-color: var(--text-secondary);
+    background: var(--background);
 }
 
 .save-btn {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: var(--primary-color);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius);
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
-    margin-top: 1rem;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .save-btn:hover {
-    background-color: var(--primary-hover);
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
 }
 
-.messages {
-    margin-bottom: 1.5rem;
+.save-btn:active {
+    transform: translateY(0);
 }
 
-.message {
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    line-height: 1.5;
+.btn-icon {
+    width: 18px;
+    height: 18px;
 }
 
-.message.success {
-    background-color: #d4edda;
-    color: var(--success-color);
-    border: 1px solid #c3e6cb;
-}
-
-.message.error {
-    background-color: #f8d7da;
-    color: var(--error-color);
-    border: 1px solid #f5c6cb;
-}
-
-.error-message {
-    color: var(--error-color);
-    font-size: 0.8rem;
-    margin-top: 0.25rem;
-}
-
-.hidden {
-    display: none;
-}
-
-@media (max-width: 576px) {
-    .form-row {
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 1rem 0.5rem;
+    }
+    
+    .profile-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .header-content {
         flex-direction: column;
+        text-align: center;
         gap: 1.5rem;
     }
     
-    .form-group.half-width {
-        flex: 1;
+    .profile-title {
+        font-size: 1.75rem;
     }
     
-    .profile-container {
-        padding: 1rem 0.5rem;
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .cancel-btn,
+    .save-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .avatar-upload-container {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .avatar-fallback {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-header {
+        padding: 2rem 1rem 1.5rem;
     }
     
     .profile-content {
         padding: 1.5rem 1rem;
     }
     
-    .profile-header {
+    .profile-stats {
         flex-direction: column;
-        text-align: center;
         gap: 1rem;
-    }
-    
-    .profile-header-content {
         text-align: center;
     }
+}
+
+/* Animation for form elements */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-section {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.form-section:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+/* Focus states for accessibility */
+.form-control:focus,
+.save-btn:focus,
+.cancel-btn:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Loading state for save button */
+.save-btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.save-btn.loading .btn-text {
+    visibility: hidden;
+}
+
+.save-btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 </style>
 
@@ -347,19 +730,72 @@
 document.addEventListener('DOMContentLoaded', function() {
     const avatar = document.getElementById('profile-avatar');
     const fileInput = document.getElementById('id_profile_picture');
-    const form = document.getElementById('profile-picture-form');
+    const pictureForm = document.getElementById('picture-form');
+    const uploadSpinner = document.getElementById('upload-spinner');
+    const saveBtn = document.querySelector('.save-btn');
 
-    if (avatar && fileInput) {
+    // Profile picture upload
+    if (avatar && fileInput && pictureForm) {
+        console.log("DEBUG: Profile picture upload elements loaded");
+        
         avatar.addEventListener('click', function() {
+            console.log("DEBUG: Avatar clicked, triggering file input");
             fileInput.click();
         });
 
         fileInput.addEventListener('change', function() {
+            console.log("DEBUG: File input changed");
             if (fileInput.files && fileInput.files[0]) {
-                form.submit();
+                console.log("DEBUG: File selected:", fileInput.files[0].name);
+                
+                // Show loading spinner
+                uploadSpinner.style.display = 'flex';
+                avatar.style.opacity = '0.5';
+                
+                console.log("DEBUG: Submitting picture form...");
+                
+                // Submit the picture form when a file is selected
+                pictureForm.submit();
+            } else {
+                console.log("DEBUG: No file selected");
             }
         });
     }
+
+    // Form submission loading state
+    if (saveBtn) {
+        const mainForm = document.getElementById('main-profile-form');
+        mainForm.addEventListener('submit', function() {
+            saveBtn.classList.add('loading');
+        });
+    }
+
+    // Preview image before upload (optional enhancement)
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const avatarImg = document.getElementById('profile-avatar-img');
+                const avatarFallback = document.getElementById('avatar-fallback');
+                
+                if (avatarImg) {
+                    avatarImg.src = e.target.result;
+                } else if (avatarFallback) {
+                    // Create new image element
+                    const newImg = document.createElement('img');
+                    newImg.src = e.target.result;
+                    newImg.alt = "Profile picture preview";
+                    newImg.className = "profile-avatar";
+                    newImg.id = "profile-avatar-img";
+                    
+                    // Replace fallback with image
+                    avatarFallback.parentNode.replaceChild(newImg, avatarFallback);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 });
 </script>
 {% endblock %}
