@@ -1,168 +1,156 @@
 import os
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages, auth
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.views import PasswordChangeView
-from django.urls import reverse_lazy
-from django.views.generic import FormView
-from django.conf import settings
-from .forms import ProfileForm, ProfilePictureForm, CustomPasswordChangeForm
-from .models import Profile
-from .supabase_utils import upload_profile_picture, delete_profile_picture
+from django.contrib import messages
+from django.contrib.auth.models import User
+from .supabase_utils import get_supabase_client, upload_profile_picture_to_supabase, update_or_create_profile
+import logging
+
+logger = logging.getLogger(__name__)
+
+@login_required
+def upload_profile_picture(request):
+    """Handle profile picture upload separately"""
+    print("=== DEBUG: upload_profile_picture function called ===")
+    
+    if request.method == 'POST' and request.FILES.get('profile_picture'):
+        try:
+            file = request.FILES['profile_picture']
+            user_id_str = str(request.user.id)
+            
+            print(f"DEBUG: Uploading profile picture for user {user_id_str}")
+            print(f"DEBUG: File: {file.name}, Size: {file.size}, Type: {file.content_type}")
+            
+            # Upload to Supabase Storage (using the renamed function)
+            file_url = upload_profile_picture_to_supabase(file, user_id_str)
+            print(f"DEBUG: Upload successful, URL: {file_url}")
+            
+            # Update profile in Supabase using the helper function
+            profile_data = {
+                'profile_picture_url': file_url,
+                'updated_at': 'now()'
+            }
+            
+            print(f"DEBUG: Updating database with profile data: {profile_data}")
+            success = update_or_create_profile(user_id_str, profile_data)
+            
+            if success:
+                print("DEBUG: Database update successful")
+                messages.success(request, 'Profile picture updated successfully!')
+            else:
+                print("DEBUG: Database update failed")
+                messages.error(request, 'Error updating profile picture in database.')
+                
+            return redirect('profile')
+            
+        except Exception as e:
+            print(f"DEBUG: Upload error: {str(e)}")
+            import traceback
+            print(f"DEBUG: Full traceback: {traceback.format_exc()}")
+            messages.error(request, f'Error uploading profile picture: {str(e)}')
+    
+    print("DEBUG: No file found in request or not POST method")
+    return redirect('profile')
 
 @login_required
 def profile_view(request):
     """View for user profile management."""
-    # Get or create user profile
-    profile = get_object_or_404(Profile, user=request.user)
     
-    # Initialize forms with current instance data
-    profile_form = ProfileForm(instance=profile)
-    password_form = CustomPasswordChangeForm(request.user)
-    picture_form = ProfilePictureForm(instance=profile)
+    print(f"=== DEBUG: Profile view called ===")
+    print(f"User: {request.user}, ID: {request.user.id}")
+    print(f"Request method: {request.method}")
     
-    if request.method == 'POST':
-        # Handle profile picture upload
-        if 'profile_picture' in request.FILES:
-            picture_form = ProfilePictureForm(request.POST, request.FILES, instance=profile)
-            if picture_form.is_valid():
-                # Handle file upload to Supabase
-                file = request.FILES['profile_picture']
-                try:
-                    # Upload new profile picture
-                    file_url = upload_profile_picture(file, request.user.id)
-                    if file_url:
-                        # Delete old profile picture if exists
-                        if profile.profile_picture_url:
-                            delete_profile_picture(profile.profile_picture_url)
-                        
-                        # Update profile with new picture URL
-                        profile.profile_picture_url = file_url
-                        profile.save()
-                        messages.success(request, 'Profile picture updated successfully!')
-                    else:
-                        messages.error(request, 'Failed to upload profile picture. Please try again.')
-                except Exception as e:
-                    messages.error(request, f'Error uploading profile picture: {str(e)}')
-                return redirect('profile')
-        
-        # Update profile information
-        elif 'update_profile' in request.POST:
-            # Update user fields
-            user = request.user
-            user.first_name = request.POST.get('first_name', '')
-            user.last_name = request.POST.get('last_name', '')
-            user.username = request.POST.get('username', '')
+    # Handle profile picture upload via separate form
+    if request.method == 'POST' and request.FILES.get('profile_picture'):
+        print("DEBUG: Profile picture upload detected in profile_view")
+        return upload_profile_picture(request)
+    
+    # Initialize Supabase client
+    try:
+        supabase = get_supabase_client()
+        print("DEBUG: Supabase client connected successfully")
+    except ValueError as e:
+        print(f"DEBUG: Supabase connection error: {e}")
+        messages.error(request, 'Server configuration error. Please contact administrator.')
+        return render(request, 'profile_app/profile_new.html')
+    
+    # Handle profile information update
+    if request.method == 'POST' and 'update_profile' in request.POST:
+        print("DEBUG: Profile info update detected")
+        try:
+            first_name = request.POST.get('first_name', '')
+            last_name = request.POST.get('last_name', '')
+            username = request.POST.get('username', '')
+            phone_number = request.POST.get('phone', '')
             
-            # Update profile fields
-            profile_form = ProfileForm(request.POST, instance=profile)
-            if profile_form.is_valid():
-                try:
-                    # Save user first
-                    user.save()
-                    
-                    # Then save profile
-                    profile = profile_form.save(commit=False)
-                    # Update full_name based on first and last name
-                    profile.full_name = f"{user.first_name} {user.last_name}".strip()
-                    profile.save()
-                    
-                    messages.success(request, 'Profile updated successfully!')
-                    return redirect('profile')
-                except Exception as e:
-                    messages.error(request, f'Error updating profile: {str(e)}')
+            print(f"DEBUG: Form data - First: {first_name}, Last: {last_name}, Username: {username}, Phone: {phone_number}")
+            
+            # Convert user ID to string for Supabase
+            user_id_str = str(request.user.id)
+            
+            # Update Django user
+            user = request.user
+            if first_name:
+                user.first_name = first_name
+            if last_name:
+                user.last_name = last_name
+            if username:
+                user.username = username
+            user.save()
+            print("DEBUG: Django user updated")
+            
+            # Update profile in Supabase using the helper function
+            profile_data = {
+                'first_name': first_name,
+                'last_name': last_name,
+                'username': username,
+                'phone_number': phone_number,
+                'full_name': f"{first_name} {last_name}".strip(),
+                'updated_at': 'now()'
+            }
+            
+            success = update_or_create_profile(user_id_str, profile_data)
+            
+            if success:
+                messages.success(request, 'Profile updated successfully!')
             else:
-                # If form is invalid, show error messages
-                for field, errors in profile_form.errors.items():
-                    for error in errors:
-                        messages.error(request, f"{field}: {error}")
+                messages.error(request, 'Error updating profile in database.')
                 
-                # Add username validation error if any
-                if 'username' in request.POST:
-                    username = request.POST['username']
-                    if not username:
-                        messages.error(request, 'Username is required')
-                    elif len(username) < 3:
-                        messages.error(request, 'Username must be at least 3 characters long')
-                    elif User.objects.exclude(pk=user.pk).filter(username=username).exists():
-                        messages.error(request, 'This username is already taken')
-                        
-        # Handle password change
-        elif 'change_password' in request.POST:
-            password_form = CustomPasswordChangeForm(request.user, request.POST)
-            if password_form.is_valid():
-                user = password_form.save()
-                update_session_auth_hash(request, user)
-                messages.success(request, 'Your password was successfully updated!')
-                return redirect('profile')
-            else:
-                for field, errors in password_form.errors.items():
-                    for error in errors:
-                        messages.error(request, f"{error}")
-        
-        # Handle password change
-        elif 'change_password' in request.POST:
-            password_form = CustomPasswordChangeForm(request.user, request.POST)
-            if password_form.is_valid():
-                user = password_form.save()
-                update_session_auth_hash(request, user)
-                messages.success(request, 'Your password was successfully updated!')
-                return redirect('profile')
-            else:
-                for field, errors in password_form.errors.items():
-                    for error in errors:
-                        messages.error(request, f"{field}: {error}")
-        
-        # Handle profile picture upload
-        elif 'upload_picture' in request.FILES:
-            picture_form = ProfilePictureForm(request.POST, request.FILES, instance=profile)
-            if picture_form.is_valid():
-                try:
-                    file = request.FILES['profile_picture_url']
-                    
-                    # Delete old profile picture if exists
-                    if profile.profile_picture_url:
-                        delete_profile_picture(profile.profile_picture_url)
-                    
-                    # Upload new profile picture
-                    url = upload_profile_picture(file, str(request.user.id))
-                    
-                    # Save the URL to the profile
-                    profile.profile_picture_url = url
-                    profile.save()
-                    
-                    messages.success(request, 'Profile picture updated successfully!')
-                    return redirect('profile')
-                    
-                except Exception as e:
-                    messages.error(request, f'Error uploading profile picture: {str(e)}')
+            return redirect('profile')
+            
+        except Exception as e:
+            print(f"DEBUG: Profile update error: {str(e)}")
+            messages.error(request, f'Error updating profile: {str(e)}')
     
-    # Prepare context for the template
-    profile_form = ProfileForm(instance=profile)
-    profile_picture_form = ProfilePictureForm()
-    
-    context = {
-        'profile_form': profile_form,
-        'profile_picture_form': profile_picture_form,
-        'user': request.user,
-    }
+    # GET request - fetch current data
+    try:
+        user = request.user
+        user_id_str = str(user.id)
+        
+        print("DEBUG: Fetching profile data from Supabase...")
+        response = supabase.table('profiles').select('*').eq('user_id', user_id_str).execute()
+        print(f"DEBUG: Profile fetch response: {response}")
+        
+        profile_data = response.data[0] if response.data else {}
+        print(f"DEBUG: Profile data: {profile_data}")
+        
+        # Check if profile picture URL exists and is accessible
+        if profile_data.get('profile_picture_url'):
+            print(f"DEBUG: Profile picture URL found: {profile_data['profile_picture_url']}")
+        else:
+            print("DEBUG: No profile picture URL found")
+        
+        context = {
+            'user': user,
+            'profile_data': profile_data,
+        }
+        
+    except Exception as e:
+        print(f"DEBUG: Profile fetch error: {str(e)}")
+        messages.error(request, f'Error loading profile: {str(e)}')
+        context = {
+            'user': request.user,
+            'profile_data': {},
+        }
     
     return render(request, 'profile_app/profile_new.html', context)
-
-
-class ChangePasswordView(PasswordChangeView):
-    """View for changing user password."""
-    form_class = CustomPasswordChangeForm
-    template_name = 'profile_app/change_password.html'
-    success_url = reverse_lazy('profile')
-
-    def form_valid(self, form):
-        messages.success(self.request, 'Your password was successfully updated!')
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        for field, errors in form.errors.items():
-            for error in errors:
-                messages.error(self.request, f"{field}: {error}")
-        return super().form_invalid(form)
