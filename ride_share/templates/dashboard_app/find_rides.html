@@ -4,9 +4,7 @@
     {% block title %}Find Rides{% endblock %}
     {% block content %}
     <link rel="stylesheet" href="{% static 'css/find_rides.css' %}">
-        <div class="find-rides-container">
-            <!-- Page Header -->
-             {% if messages %}
+    {% if messages %}
             <div class="alert-area" id="alertArea">
                 {% for message in messages %}
                 <div class="alert-message {{ message.tags }}">
@@ -16,7 +14,8 @@
                 {% endfor %}
             </div>
             {% endif %}
-
+        <div class="find-rides-container">
+            <!-- Page Header -->
             <div class="page-header">
                 <h1>
                     <i class="fa-solid fa-magnifying-glass-location"></i>
@@ -157,9 +156,7 @@
             </div>
             {% endif %}
         </div>
-    {% endblock %}
-
-<script>
+        <script>
     // Set minimum date to today
     const dateInput = document.getElementById('searchDate');
     const today = new Date().toISOString().split('T')[0];
@@ -180,12 +177,12 @@
     });
 
     // Request ride button handlers
-    document.querySelectorAll('.btn-request').forEach(button => {
-        button.addEventListener('click', function() {
-            // Placeholder for future backend integration
-            alert('Ride request feature coming soon!');
-        });
-    });
+    // document.querySelectorAll('.btn-request').forEach(button => {
+    //     button.addEventListener('click', function() {
+    //         // Placeholder for future backend integration
+    //         alert('Ride request feature coming soon!');
+    //     });
+    // });
 
     document.addEventListener('DOMContentLoaded', function() {
     const alertArea = document.getElementById('alertArea');
@@ -196,3 +193,5 @@
         }
     });
 </script>
+    {% endblock %}
+
