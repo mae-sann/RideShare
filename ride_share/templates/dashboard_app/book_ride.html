@@ -1,0 +1,120 @@
+{% extends 'dashboard_app/dashboard.html' %}
+{% load static %}
+
+{% block title %}Book Ride{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/find_rides.css' %}">
+
+<div class="find-rides-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <i class="fa-solid fa-ticket"></i>
+            Confirm Your Booking
+        </h1>
+        <p>Review the ride details and confirm your booking.</p>
+    </div>
+
+    <!-- Ride Details Card -->
+    <div class="search-card">
+        <div class="ride-card" style="grid-template-columns: 1fr; border: 2px solid #2563eb;">
+            <div class="ride-info">
+                <div class="ride-header">
+                    <div class="driver-avatar">{{ ride.driver.first_name|slice:":1" }}{{ ride.driver.last_name|slice:":1" }}</div>
+                    <div class="driver-details">
+                        <div class="driver-name">{{ ride.driver.get_full_name }}</div>
+                        <span class="vehicle-badge">
+                            <i class="fa-solid fa-car"></i>
+                            Car
+                        </span>
+                    </div>
+                </div>
+
+                <div class="ride-route">
+                    <div class="location">
+                        <span class="location-label">From</span>
+                        <span class="location-name">{{ ride.origin }}</span>
+                    </div>
+                    <i class="fa-solid fa-arrow-right route-arrow"></i>
+                    <div class="location">
+                        <span class="location-label">To</span>
+                        <span class="location-name">{{ ride.destination }}</span>
+                    </div>
+                </div>
+
+                <div class="ride-meta">
+                    <div class="meta-item">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span>{{ ride.start_date }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fa-regular fa-clock"></i>
+                        <span>{{ ride.start_time }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fa-solid fa-user-group"></i>
+                        <span>{{ ride.seats_available }} seats available</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Form -->
+    <div class="search-card" style="max-width: 500px;">
+        <form method="POST" class="search-form">
+            {% csrf_token %}
+            
+            <div class="search-group">
+                <label for="{{ form.num_seats.id_for_label }}">
+                    <i class="fa-solid fa-user-group"></i>
+                    {{ form.num_seats.label }}
+                </label>
+                {{ form.num_seats }}
+                <div class="helper-text">
+                    <i class="fa-solid fa-circle-info"></i>
+                    How many seats do you need?
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+                <a href="{% url 'find_rides' %}" class="btn-cancel" style="flex: 1; text-align: center;">
+                    Cancel
+                </a>
+                <button type="submit" class="btn-search" style="flex: 1;">
+                    <i class="fa-solid fa-check"></i>
+                    Confirm Booking
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .btn-cancel {
+        display: inline-block;
+        padding: 12px 20px;
+        background: #e5e7eb;
+        color: #111827;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background 180ms ease;
+        cursor: pointer;
+    }
+    .btn-cancel:hover {
+        background: #d1d5db;
+    }
+    .helper-text {
+        color: #6b7280;
+        font-size: 12px;
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+</style>
+{% endblock %}
