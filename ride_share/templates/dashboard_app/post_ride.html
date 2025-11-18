@@ -75,8 +75,8 @@
 
             <!-- Available Seats -->
             <div class="form-group">
-                <label for="availableSeats">
-                    Available Seats
+                <label for="seats_available">
+                    {{form.seats_available.label}}
                 </label>
                 {{form.seats_available}}
                 <div class="helper-text">
@@ -85,34 +85,18 @@
                 </div>
             </div>
 
-            <!-- Vehicle Type -->
             <div class="form-group">
-                <label>Vehicle Type</label>
-                <div class="vehicle-type-group">
-                    <div class="vehicle-option">
-                        <input 
-                            type="radio" 
-                            id="vehicleCar" 
-                            name="vehicle_type" 
-                            value="car"
-                            checked
-                        >
-                        <label for="vehicleCar" class="vehicle-label">
-                            <span>Car</span>
-                        </label>
-                    </div>
-                    <div class="vehicle-option">
-                        <input 
-                            type="radio" 
-                            id="vehicleMotorcycle" 
-                            name="vehicle_type" 
-                            value="motorcycle"
-                        >
-                        <label for="vehicleMotorcycle" class="vehicle-label">
-                            <span>Motorcycle</span>
-                        </label>
-                    </div>
-                </div>
+                <label for="availableSeats">
+                    {{form.price.label}}
+                </label>
+                {{form.price}}
+            </div>
+
+            <div class="form-group">
+                <label for="availableSeats">
+                    {{form.remarks.label}}
+                </label>
+                {{form.remarks}}
             </div>
 
             <!-- Form Actions -->
