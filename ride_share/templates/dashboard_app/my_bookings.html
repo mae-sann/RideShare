@@ -1,0 +1,127 @@
+{% extends 'dashboard_app/dashboard.html' %}
+{% load static %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/find_rides.css' %}">
+
+<div class="find-rides-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <i class="fa-solid fa-bookmark"></i>
+            My Bookings
+        </h1>
+        <p>View all your ride bookings and their status.</p>
+    </div>
+
+    <!-- Results Header -->
+    <div class="results-header">
+        <h2>Your Bookings</h2>
+        <span class="results-count" id="resultsCount">
+            {% if bookings %}
+                Showing {{ bookings|length }} booking{{ bookings|length|pluralize }}
+            {% else %}
+                No bookings yet
+            {% endif %}
+        </span>
+    </div>
+
+    <!-- Bookings List -->
+    <div class="rides-grid" id="bookingsGrid">
+        {% if bookings %}
+            {% for booking in bookings %}
+            <div class="ride-card">
+                <div class="ride-info">
+                    <div class="ride-header">
+                        <div class="driver-avatar">{{ booking.ride.driver.first_name|slice:":1" }}{{ booking.ride.driver.last_name|slice:":1" }}</div>
+                        <div class="driver-details">
+                            <div class="driver-name">{{ booking.ride.driver.get_full_name }}</div>
+                            <span class="vehicle-badge">
+                                <i class="fa-solid fa-car"></i>
+                                Car
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="ride-route">
+                        <div class="location">
+                            <span class="location-label">From</span>
+                            <span class="location-name">{{ booking.ride.origin }}</span>
+                        </div>
+                        <i class="fa-solid fa-arrow-right route-arrow"></i>
+                        <div class="location">
+                            <span class="location-label">To</span>
+                            <span class="location-name">{{ booking.ride.destination }}</span>
+                        </div>
+                    </div>
+
+                    <div class="ride-meta">
+                        <div class="meta-item">
+                            <i class="fa-regular fa-calendar"></i>
+                            <span>{{ booking.ride.start_date }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fa-regular fa-clock"></i>
+                            <span>{{ booking.ride.start_time }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fa-solid fa-user-group"></i>
+                            <span>{{ booking.num_seats }} seat{{ booking.num_seats|pluralize }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ride-actions">
+                    <div class="seats-available">
+                        <span class="status {% if booking.status == 'confirmed' %}confirmed{% elif booking.status == 'pending' %}pending{% else %}cancelled{% endif %}">
+                            {{ booking.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- No Bookings Message -->
+            <div class="no-results" id="noBookings" style="grid-column: 1 / -1;">
+                <div class="no-results-icon">
+                    <i class="fa-regular fa-face-frown"></i>
+                </div>
+                <h3>No Bookings Yet</h3>
+                <p>You haven't booked any rides yet. Start exploring available rides to make your first booking!</p>
+                <a href="{% url 'find_rides' %}" class="btn-request" style="margin-top: 16px;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Find Rides
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .status {
+        font-size: 12px;
+        font-weight: 700;
+        color: #334155;
+        background: #e2e8f0;
+        padding: 6px 12px;
+        border-radius: 999px;
+    }
+    .status.confirmed {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    .status.pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    .status.cancelled {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    .no-results {
+        display: flex !important;
+    }
+</style>
+{% endblock %}

@@ -82,7 +82,7 @@
             <!-- Rides Grid -->
             <div class="rides-grid" id="ridesGrid">
                 <!-- Ride Card -->
-                 {% if rides%}
+                {% if rides%}
                     {% for ride in rides %}
                     <div class="ride-card">
                         <div class="ride-info">
@@ -126,10 +126,10 @@
                                 <i class="fa-solid fa-user-group"></i>
                                 <span>{{ride.seats_available}} seats left</span>
                             </div>
-                            <button type="submit" class="btn-request">
+                            <a href="{% url 'book_ride' ride.id %}" class="btn-request">
                                 <i class="fa-solid fa-paper-plane"></i>
                                 Request Ride
-                            </button>
+                            </a>
                         </div>
                     </div>
                 {% endfor %}
