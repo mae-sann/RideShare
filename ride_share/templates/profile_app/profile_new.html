@@ -1,0 +1,688 @@
+{% extends 'dashboard_app/dashboard.html' %}
+{% load static %}
+
+{% block title %}Profile Settings{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Alert Area for Messages -->
+    {% if messages %}
+    <div class="alert-area" id="alertArea">
+        {% for message in messages %}
+        <div class="alert-message {{ message.tags }}">
+            <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <i class="fa-solid fa-user-gear"></i>
+            Profile Settings
+        </h1>
+        <p>Manage your personal information and profile preferences.</p>
+    </div>
+
+    <!-- Profile Card -->
+    <div class="form-card">
+        <!-- Profile Header Section -->
+        <div class="profile-header-section">
+            <div class="profile-avatar-container">
+                <div class="profile-avatar-wrapper" id="profile-avatar">
+                    {% if profile_data.profile_picture_url %}
+                        <img src="{{ profile_data.profile_picture_url }}" alt="{{ user.get_full_name }}" class="profile-avatar" id="profile-avatar-img">
+                    {% else %}
+                        <div class="avatar-fallback" id="avatar-fallback">
+                            {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                        </div>
+                    {% endif %}
+                    <div class="avatar-overlay">
+                        <i class="fa-solid fa-camera"></i>
+                        <span>Change Photo</span>
+                    </div>
+                </div>
+                <!-- Loading Spinner -->
+                <div class="upload-spinner" id="upload-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <span>Uploading...</span>
+                </div>
+            </div>
+            
+            <div class="profile-info-header">
+                <h2 class="profile-name">{{ user.get_full_name|default:user.username }}</h2>
+                <p class="profile-email">{{ user.email }}</p>
+                <div class="profile-meta">
+                    <span class="member-since">
+                        <i class="fa-regular fa-calendar"></i>
+                        Member since {{ user.date_joined|date:"M Y" }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Separate form for profile picture upload -->
+        <form method="post" enctype="multipart/form-data" id="picture-form" style="display: none;">
+            {% csrf_token %}
+            <input type="file" name="profile_picture" id="id_profile_picture" accept="image/jpeg,image/png">
+        </form>
+
+        <!-- Main Profile Form -->
+        <form method="post" class="profile-form" id="main-profile-form">
+            {% csrf_token %}
+            
+            <!-- Personal Information Section -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="fa-solid fa-user"></i>
+                    Personal Information
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_first_name">
+                            <i class="fa-regular fa-id-card"></i>
+                            First Name
+                            <span class="required">*</span>
+                        </label>
+                        <input type="text" id="id_first_name" name="first_name" value="{{ user.first_name }}" class="form-control" placeholder="Enter your first name">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_last_name">
+                            <i class="fa-regular fa-id-card"></i>
+                            Last Name
+                            <span class="required">*</span>
+                        </label>
+                        <input type="text" id="id_last_name" name="last_name" value="{{ user.last_name }}" class="form-control" placeholder="Enter your last name">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_username">
+                            <i class="fa-regular fa-user"></i>
+                            Username
+                            <span class="required">*</span>
+                        </label>
+                        <input type="text" id="id_username" name="username" value="{{ user.username }}" class="form-control" placeholder="Choose a username">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_phone">
+                            <i class="fa-solid fa-phone"></i>
+                            Phone Number
+                        </label>
+                        <input type="tel" id="id_phone" name="phone" value="{{ profile_data.phone_number|default:'' }}" class="form-control" placeholder="+1 (555) 000-0000">
+                        <div class="helper-text">
+                            <i class="fa-solid fa-circle-info"></i>
+                            Your phone number will be shared with ride matches
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <i class="fa-regular fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <div class="email-display">
+                        {{ user.email }}
+                    </div>
+                    <div class="helper-text">
+                        <i class="fa-solid fa-circle-info"></i>
+                        Contact support to change your email address
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <a href="{% url 'dashboard' %}" class="btn-cancel">Cancel</a>
+                <button type="submit" name="update_profile" class="btn-submit">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --background: #f8fafc;
+    --card-bg: #ffffff;
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --gradient: linear-gradient(135deg, #000000 0%, #1e3a8a 50%, #3b82f6 100%);
+    --radius: 8px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--background);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.profile-container {
+    padding: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Alert Area */
+.alert-area {
+    margin-bottom: 1.5rem;
+}
+
+.alert-message {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    font-weight: 500;
+    border: 1px solid;
+}
+
+.alert-message.success {
+    background: #f0fdf4;
+    color: #166534;
+    border-color: #bbf7d0;
+}
+
+.alert-message.error {
+    background: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+/* Page Header */
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.page-header h1 i {
+    color: var(--primary-color);
+}
+
+.page-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* Form Card */
+.form-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+/* Profile Header Section */
+.profile-header-section {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    background: var(--gradient);
+    border-radius: var(--radius);
+    margin-bottom: 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-header-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient);
+    opacity: 0.95;
+}
+
+.profile-avatar-container {
+    position: relative;
+    z-index: 2;
+}
+
+.profile-avatar-wrapper {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-avatar-wrapper:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+    box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4);
+}
+
+.profile-avatar-wrapper:hover .avatar-overlay {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: all 0.3s ease;
+    transform: translateY(10px);
+    border-radius: 50%;
+    gap: 0.5rem;
+}
+
+.avatar-overlay i {
+    font-size: 1.5rem;
+}
+
+.avatar-overlay span {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.upload-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(30, 41, 59, 0.95);
+    padding: 1rem;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow);
+    z-index: 10;
+    color: white;
+    border: 1px solid #334155;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #475569;
+    border-top: 2px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.profile-info-header {
+    flex: 1;
+    z-index: 2;
+}
+
+.profile-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.profile-email {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 1rem;
+}
+
+.profile-meta {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.member-since {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Form Sections */
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.section-title i {
+    color: var(--primary-color);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.form-group label i {
+    color: var(--text-muted);
+    width: 16px;
+}
+
+.required {
+    color: var(--error-color);
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: var(--card-bg);
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+}
+
+.helper-text {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.helper-text i {
+    color: var(--text-muted);
+}
+
+.email-display {
+    padding: 0.75rem 1rem;
+    background: #f8fafc;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-cancel {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-cancel:hover {
+    border-color: var(--text-secondary);
+    background: #f8fafc;
+}
+
+.btn-submit {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-submit:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 0.5rem;
+    }
+    
+    .form-card {
+        padding: 1.5rem;
+    }
+    
+    .profile-header-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+    
+    .profile-name {
+        font-size: 1.5rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-cancel,
+    .btn-submit {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .profile-avatar-wrapper {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .avatar-fallback {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .form-card {
+        padding: 1rem;
+    }
+    
+    .profile-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const avatar = document.getElementById('profile-avatar');
+    const fileInput = document.getElementById('id_profile_picture');
+    const pictureForm = document.getElementById('picture-form');
+    const uploadSpinner = document.getElementById('upload-spinner');
+
+    // Profile picture upload
+    if (avatar && fileInput && pictureForm) {
+        avatar.addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files && fileInput.files[0]) {
+                // Show loading spinner
+                uploadSpinner.style.display = 'flex';
+                avatar.style.opacity = '0.5';
+                
+                // Submit the picture form when a file is selected
+                pictureForm.submit();
+            }
+        });
+    }
+
+    // Preview image before upload
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const avatarImg = document.getElementById('profile-avatar-img');
+                const avatarFallback = document.getElementById('avatar-fallback');
+                
+                if (avatarImg) {
+                    avatarImg.src = e.target.result;
+                } else if (avatarFallback) {
+                    // Create new image element
+                    const newImg = document.createElement('img');
+                    newImg.src = e.target.result;
+                    newImg.alt = "Profile picture preview";
+                    newImg.className = "profile-avatar";
+                    newImg.id = "profile-avatar-img";
+                    
+                    // Replace fallback with image
+                    avatarFallback.parentNode.replaceChild(newImg, avatarFallback);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Auto-hide alerts after 5 seconds
+    const alertArea = document.getElementById('alertArea');
+    if (alertArea) {
+        setTimeout(() => {
+            alertArea.style.display = 'none';
+        }, 5000);
+    }
+});
+</script>
+{% endblock %}
