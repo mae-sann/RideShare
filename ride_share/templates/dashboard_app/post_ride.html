@@ -115,6 +115,10 @@
 
     // Form submission handler (placeholder for future backend integration)
     document.getElementById('postRideForm').addEventListener('submit', function(e) {
+        // Set minimum date to today
+        const dateInput = document.getElementById('rideDate');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
         
         // Show success alert (placeholder)
         const alertArea = document.getElementById('alertArea');
