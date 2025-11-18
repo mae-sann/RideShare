@@ -7,20 +7,18 @@ Drivers can post available rides with trip details, while passengers can search 
 ---
 
 ## 🌟 Features  
-- 👥 **User Roles**: Drivers and Passengers  
-- 📍 **Ride Posting**: Drivers can post trip details (origin, destination, time, available seats)  
-- 🔍 **Ride Search & Booking**: Passengers can search and reserve available rides  
-- 💬 **Communication**: In-app messaging or contact between drivers and passengers  
+- 📍 **Ride Posting**: Users can post trip details (origin, destination, time, available seats)  
+- 🔍 **Ride Search**: Users can search available rides  
 - 🔒 **Authentication**: Secure login and signup using **CIT-U student email**  
 - 📊 **Ride Management**: View, update, or cancel ride offers and bookings  
 - 🌱 **Sustainability**: Encourages eco-friendly commuting and reduces traffic congestion
-  
+
 ---
 
 ## 🛠️ Tech Stack  
 - **Frontend**: HTML, CSS, JavaScript  
 - **Backend**: Django (Python)  
-- **Database**: MySQL (production), SQLite (development)  
+- **Database**: Supabase
 - **Authentication**: Student email-based signup/login  
 
 ---
@@ -60,17 +58,13 @@ python manage.py runserver
 http://127.0.0.1:8000/
 ```
 ## 📌 Usage
-- For Drivers:
+- For Users:
 
 1. Register/Login with your CIT-U email
 2. Post ride details (location, time, available seats)
 3. Manage and update ride offers
-  
-- For Passengers:
-
-1. Register/Login with your CIT-U email
-2. Search rides based on origin/destination
-3. Book a seat and connect with the driver
+4. Search rides based on origin/destination
+5. Book a seat and connect with the driver
 
 ## 🎯 Project Goals
 - Reduce student commuting costs
