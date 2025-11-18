@@ -82,7 +82,7 @@
             <!-- Rides Grid -->
             <div class="rides-grid" id="ridesGrid">
                 <!-- Ride Card -->
-                {% if rides%}
+                {% if rides %}
                     {% for ride in rides %}
                     <div class="ride-card">
                         <div class="ride-info">
@@ -90,10 +90,16 @@
                                 <div class="driver-avatar">{{ ride.driver.first_name|slice:":1" }}{{ ride.driver.last_name|slice:":1" }}</div><!--get initials-->
                                 <div class="driver-details">
                                     <div class="driver-name">{{ ride.driver.get_full_name }}</div>
-                                    <span class="vehicle-badge">
-                                        <i class="fa-solid fa-car"></i>
-                                        Car
-                                    </span>
+                                    <div class="ride-meta">
+                                        <div class="meta-item">
+                                            <i class="fa-regular fa-calendar"></i>
+                                            <span>{{ride.start_date}}</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fa-regular fa-clock"></i>
+                                            <span>{{ride.start_time}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -109,16 +115,11 @@
                                 </div>
                             </div>
 
-                            <div class="ride-meta">
-                                <div class="meta-item">
-                                    <i class="fa-regular fa-calendar"></i>
-                                    <span>{{ride.start_date}}</span>
-                                </div>
-                                <div class="meta-item">
-                                    <i class="fa-regular fa-clock"></i>
-                                    <span>{{ride.start_time}}</span>
-                                </div>
+                            <div class="ride-remarks">
+                                <span class="location-label">Remarks</span>
+                                {{ride.remarks}}
                             </div>
+
                         </div>
 
                         <div class="ride-actions">

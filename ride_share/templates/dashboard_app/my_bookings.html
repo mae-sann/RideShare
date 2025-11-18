@@ -4,7 +4,7 @@
 {% block title %}My Bookings{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/find_rides.css' %}">
+<link rel="stylesheet" href="{% static 'css/my_bookings.css' %}">
 
 <div class="find-rides-container">
     <!-- Page Header -->
@@ -38,10 +38,6 @@
                         <div class="driver-avatar">{{ booking.ride.driver.first_name|slice:":1" }}{{ booking.ride.driver.last_name|slice:":1" }}</div>
                         <div class="driver-details">
                             <div class="driver-name">{{ booking.ride.driver.get_full_name }}</div>
-                            <span class="vehicle-badge">
-                                <i class="fa-solid fa-car"></i>
-                                Car
-                            </span>
                         </div>
                     </div>
 
@@ -98,30 +94,4 @@
         {% endif %}
     </div>
 </div>
-
-<style>
-    .status {
-        font-size: 12px;
-        font-weight: 700;
-        color: #334155;
-        background: #e2e8f0;
-        padding: 6px 12px;
-        border-radius: 999px;
-    }
-    .status.confirmed {
-        background: #d1fae5;
-        color: #065f46;
-    }
-    .status.pending {
-        background: #fef3c7;
-        color: #92400e;
-    }
-    .status.cancelled {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-    .no-results {
-        display: flex !important;
-    }
-</style>
 {% endblock %}
