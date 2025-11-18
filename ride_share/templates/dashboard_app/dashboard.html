@@ -39,9 +39,13 @@
                 <i class="fa-solid fa-square-plus"></i>
                 <span>Post a Ride</span>
             </a>
-            <a href="{% url 'my_bookings' %}" class="nav-item {% if request.resolver_match.url_name == 'my_bookings' %}active{% endif %}">
+            <a href="{% url 'my_rides' %}" class="nav-item {% if request.resolver_match.url_name == 'my_rides' %}active{% endif %}">
                 <i class="fa-solid fa-square-plus"></i>
                 <span>My Rides</span>
+            </a>
+            <a href="{% url 'my_bookings' %}" class="nav-item {% if request.resolver_match.url_name == 'my_bookings' %}active{% endif %}">
+                <i class="fa-solid fa-square-plus"></i>
+                <span>My Bookings</span>
             </a>
             <a href="#" class="nav-item">
                 <i class="fa-solid fa-bell"></i>

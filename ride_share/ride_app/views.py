@@ -53,6 +53,12 @@ def book_ride(request, ride_id):
         messages.error(request, "You cannot book your own ride.")
         return redirect('find_rides')
     
+    # Check if user has an active posted ride
+    user_active_ride = Ride.objects.filter(driver=request.user, status='open').first()
+    if user_active_ride:
+        messages.error(request, "You cannot book a ride while you have an active posted ride. Please close or complete your ride first.")
+        return redirect('find_rides')
+    
     # Check if user already booked this ride
     existing_booking = Booking.objects.filter(ride=ride, passenger=request.user).first()
     if existing_booking:
@@ -95,3 +101,26 @@ def my_bookings(request):
     """Show user's bookings"""
     bookings = Booking.objects.filter(passenger=request.user).order_by('-created_at')
     return render(request, "dashboard_app/my_bookings.html", {'bookings': bookings})
+
+@login_required
+def my_rides(request):
+    """Show user's posted rides"""
+    rides = Ride.objects.filter(driver=request.user).order_by('-start_date', '-start_time')
+    return render(request, "dashboard_app/my_rides.html", {'rides': rides})
+
+@login_required
+def close_ride(request, ride_id):
+    """Close a posted ride"""
+    ride = get_object_or_404(Ride, id=ride_id)
+    
+    # Check if user is the ride owner
+    if ride.driver != request.user:
+        messages.error(request, "You can only close your own rides.")
+        return redirect('find_rides')
+    
+    # Close the ride
+    ride.status = 'closed'
+    ride.save()
+    
+    messages.success(request, "Ride closed successfully!")
+    return redirect('my_rides')

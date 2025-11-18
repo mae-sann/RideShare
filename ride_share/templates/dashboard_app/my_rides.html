@@ -1,0 +1,143 @@
+{% extends 'dashboard_app/dashboard.html' %}
+{% load static %}
+
+{% block title %}My Posted Rides{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/find_rides.css' %}">
+
+<div class="find-rides-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <i class="fa-solid fa-car"></i>
+            My Posted Rides
+        </h1>
+        <p>Manage all the rides you've posted.</p>
+    </div>
+
+    <!-- Results Header -->
+    <div class="results-header">
+        <h2>Your Rides</h2>
+        <span class="results-count" id="resultsCount">
+            {% if rides %}
+                Showing {{ rides|length }} ride{{ rides|length|pluralize }}
+            {% else %}
+                No rides posted yet
+            {% endif %}
+        </span>
+    </div>
+
+    <!-- Rides List -->
+    <div class="rides-grid" id="ridesGrid">
+        {% if rides %}
+            {% for ride in rides %}
+            <div class="ride-card">
+                <div class="ride-info">
+                    <div class="ride-header">
+                        <div class="driver-avatar">{{ ride.driver.first_name|slice:":1" }}{{ ride.driver.last_name|slice:":1" }}</div>
+                        <div class="driver-details">
+                            <div class="driver-name">Your Ride</div>
+                            <span class="vehicle-badge">
+                                <i class="fa-solid fa-car"></i>
+                                Car
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="ride-route">
+                        <div class="location">
+                            <span class="location-label">From</span>
+                            <span class="location-name">{{ ride.origin }}</span>
+                        </div>
+                        <i class="fa-solid fa-arrow-right route-arrow"></i>
+                        <div class="location">
+                            <span class="location-label">To</span>
+                            <span class="location-name">{{ ride.destination }}</span>
+                        </div>
+                    </div>
+
+                    <div class="ride-meta">
+                        <div class="meta-item">
+                            <i class="fa-regular fa-calendar"></i>
+                            <span>{{ ride.start_date }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fa-regular fa-clock"></i>
+                            <span>{{ ride.start_time }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fa-solid fa-user-group"></i>
+                            <span>{{ ride.seats_available }} seats</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ride-actions">
+                    <div class="seats-available">
+                        <span class="status {% if ride.status == 'open' %}open{% elif ride.status == 'full' %}full{% else %}closed{% endif %}">
+                            {{ ride.status|title }}
+                        </span>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 12px;">
+                        {% if ride.status == 'open' or ride.status == 'full' %}
+                        <form method="POST" action="{% url 'close_ride' ride.id %}" style="flex: 1;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-request" style="width: 100%; font-size: 12px; border: none; cursor: pointer;">
+                                <i class="fa-solid fa-ban"></i>
+                                Close
+                            </button>
+                        </form>
+                        {% else %}
+                        <button class="btn-request" style="flex: 1; font-size: 12px; opacity: 0.5; cursor: not-allowed;" disabled>
+                            <i class="fa-solid fa-check"></i>
+                            Closed
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- No Rides Message -->
+            <div class="no-results" id="noRides" style="grid-column: 1 / -1;">
+                <div class="no-results-icon">
+                    <i class="fa-regular fa-face-frown"></i>
+                </div>
+                <h3>No Rides Posted Yet</h3>
+                <p>You haven't posted any rides yet. Start by posting your first ride to help others get around!</p>
+                <a href="{% url 'post_ride' %}" class="btn-request" style="margin-top: 16px;">
+                    <i class="fa-solid fa-plus"></i>
+                    Post a Ride
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .status {
+        font-size: 12px;
+        font-weight: 700;
+        color: #334155;
+        background: #e2e8f0;
+        padding: 6px 12px;
+        border-radius: 999px;
+    }
+    .status.open {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    .status.full {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    .status.closed {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    .no-results {
+        display: flex !important;
+    }
+</style>
+{% endblock %}
