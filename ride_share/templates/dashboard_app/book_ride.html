@@ -24,10 +24,16 @@
                     <div class="driver-avatar">{{ ride.driver.first_name|slice:":1" }}{{ ride.driver.last_name|slice:":1" }}</div>
                     <div class="driver-details">
                         <div class="driver-name">{{ ride.driver.get_full_name }}</div>
-                        <span class="vehicle-badge">
-                            <i class="fa-solid fa-car"></i>
-                            Car
-                        </span>
+                        <div class="ride-meta">
+                            <div class="meta-item">
+                                <i class="fa-regular fa-calendar"></i>
+                                <span>{{ ride.start_date }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fa-regular fa-clock"></i>
+                                <span>{{ ride.start_time }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -45,24 +51,20 @@
 
                 <div class="ride-meta">
                     <div class="meta-item">
-                        <i class="fa-regular fa-calendar"></i>
-                        <span>{{ ride.start_date }}</span>
-                    </div>
-                    <div class="meta-item">
-                        <i class="fa-regular fa-clock"></i>
-                        <span>{{ ride.start_time }}</span>
-                    </div>
-                    <div class="meta-item">
                         <i class="fa-solid fa-user-group"></i>
                         <span>{{ ride.seats_available }} seats available</span>
                     </div>
+                </div>
+                <div class="ride-remarks">
+                    <span class="location-label">Remarks</span>
+                    {{ride.remarks}}
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Booking Form -->
-    <div class="search-card" style="max-width: 500px;">
+    <div class="search-card">
         <form method="POST" class="search-form">
             {% csrf_token %}
             

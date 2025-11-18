@@ -16,7 +16,7 @@ def post_ride(request):
             ride.driver = request.user
             ride.status = 'open'
             ride.save()
-            return redirect('find_rides')
+            return redirect('my_rides')
     else:
         form = PostRideForm()
 
