@@ -4,6 +4,16 @@
     {% block title %}Find Rides{% endblock %}
     {% block content %}
     <link rel="stylesheet" href="{% static 'css/find_rides.css' %}">
+    {% if messages %}
+            <div class="alert-area" id="alertArea">
+                {% for message in messages %}
+                <div class="alert-message {{ message.tags }}">
+                    <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
         <div class="find-rides-container">
             <!-- Page Header -->
             <div class="page-header">
@@ -48,18 +58,18 @@
                             id="searchDate" 
                             class="search-input"
                             name="date"
-                            value="{{ reqeust.GET.date }}"
+                            value="{{ request.GET.date }}"
                         >
                     </div>
 
-                    <div class="search-group">
+                    <!-- <div class="search-group">
                         <label for="searchVehicle">Vehicle Type</label>
                         <select id="searchVehicle" class="search-select">
                             <option value="">All Vehicles</option>
                             <option value="car">Car</option>
                             <option value="motorcycle">Motorcycle</option>
                         </select>
-                    </div>
+                    </div> -->
 
                     <button type="submit" class="btn-search">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -82,7 +92,7 @@
             <!-- Rides Grid -->
             <div class="rides-grid" id="ridesGrid">
                 <!-- Ride Card -->
-                {% if rides%}
+                {% if rides %}
                     {% for ride in rides %}
                     <div class="ride-card">
                         <div class="ride-info">
@@ -90,10 +100,16 @@
                                 <div class="driver-avatar">{{ ride.driver.first_name|slice:":1" }}{{ ride.driver.last_name|slice:":1" }}</div><!--get initials-->
                                 <div class="driver-details">
                                     <div class="driver-name">{{ ride.driver.get_full_name }}</div>
-                                    <span class="vehicle-badge">
-                                        <i class="fa-solid fa-car"></i>
-                                        Car
-                                    </span>
+                                    <div class="ride-meta">
+                                        <div class="meta-item">
+                                            <i class="fa-regular fa-calendar"></i>
+                                            <span>{{ride.start_date}}</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fa-regular fa-clock"></i>
+                                            <span>{{ride.start_time}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -109,16 +125,11 @@
                                 </div>
                             </div>
 
-                            <div class="ride-meta">
-                                <div class="meta-item">
-                                    <i class="fa-regular fa-calendar"></i>
-                                    <span>{{ride.start_date}}</span>
-                                </div>
-                                <div class="meta-item">
-                                    <i class="fa-regular fa-clock"></i>
-                                    <span>{{ride.start_time}}</span>
-                                </div>
+                            <div class="ride-remarks">
+                                <span class="location-label">Remarks</span>
+                                {{ride.remarks}}
                             </div>
+
                         </div>
 
                         <div class="ride-actions">
@@ -145,33 +156,42 @@
             </div>
             {% endif %}
         </div>
-    {% endblock %}
-
-<script>
+        <script>
     // Set minimum date to today
     const dateInput = document.getElementById('searchDate');
     const today = new Date().toISOString().split('T')[0];
     dateInput.setAttribute('min', today);
 
-    // Search form handler (placeholder for future backend integration)
-    document.getElementById('searchForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // // Search form handler (placeholder for future backend integration)
+    // document.getElementById('searchForm').addEventListener('submit', function(e) {
+    //     // e.preventDefault();
         
-        // Placeholder: In a real app, this would filter results
-        console.log('Search submitted');
+    //     // Placeholder: In a real app, this would filter results
+    //     console.log('Search submitted');
         
-        // Example: Show no results (toggle for demonstration)
-        // Uncomment to test no results state:
-        // document.getElementById('ridesGrid').style.display = 'none';
-        // document.getElementById('noResults').classList.add('show');
-        // document.getElementById('resultsCount').textContent = 'No rides found';
-    });
+    //     // Example: Show no results (toggle for demonstration)
+    //     // Uncomment to test no results state:
+    //     // document.getElementById('ridesGrid').style.display = 'none';
+    //     // document.getElementById('noResults').classList.add('show');
+    //     // document.getElementById('resultsCount').textContent = 'No rides found';
+    // });
 
-    // Request ride button handlers
-    document.querySelectorAll('.btn-request').forEach(button => {
-        button.addEventListener('click', function() {
-            // Placeholder for future backend integration
-            alert('Ride request feature coming soon!');
-        });
+    // // Request ride button handlers
+    // // document.querySelectorAll('.btn-request').forEach(button => {
+    // //     button.addEventListener('click', function() {
+    // //         // Placeholder for future backend integration
+    // //         alert('Ride request feature coming soon!');
+    // //     });
+    // // });
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const alertArea = document.getElementById('alertArea');
+    if (alertArea) {
+        setTimeout(() => {
+            alertArea.style.display = 'none';
+        }, 5000);
+        }
     });
 </script>
+    {% endblock %}
+

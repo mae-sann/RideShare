@@ -7,13 +7,17 @@
 {% block content%}
  <link rel="stylesheet" href="{% static 'css/post_ride.css' %}">
  
+  {% if messages %}
+            <div class="alert-area" id="alertArea">
+                {% for message in messages %}
+                <div class="alert-message {{ message.tags }}">
+                    <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+            </div>
+    {% endif %}
 <div class="post-ride-container">
-    <!-- Alert Area (Hidden by default) -->
-    <div class="alert-area success" id="alertArea">
-        <i class="fa-solid fa-circle-check"></i>
-        <span id="alertMessage">Ride posted successfully!</span>
-    </div>
-
     <!-- Page Header -->
     <div class="page-header">
         <h1>
@@ -112,23 +116,21 @@
 </div>
 
 <script>
-    // Set minimum date to today
-    const dateInput = document.getElementById('rideDate');
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.setAttribute('min', today);
 
     // Form submission handler (placeholder for future backend integration)
     document.getElementById('postRideForm').addEventListener('submit', function(e) {
-        
-        // Show success alert (placeholder)
+        // Set minimum date to today
+        const dateInput = document.getElementById('rideDate');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+
         const alertArea = document.getElementById('alertArea');
-        alertArea.style.display = 'flex';
-        
-        // Hide alert after 5 seconds
+        if (alertArea) {
         setTimeout(() => {
             alertArea.style.display = 'none';
         }, 5000);
-        
+        }
+  
         // Reset form
         this.reset();
         

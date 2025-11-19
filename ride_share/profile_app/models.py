@@ -6,7 +6,7 @@ import os
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.conf import settings
-from supabase import create_client, Client
+# from supabase import create_client, Client
 import uuid
 
 def user_profile_path(instance, filename):

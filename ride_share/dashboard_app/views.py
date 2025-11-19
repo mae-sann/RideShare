@@ -2,19 +2,17 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from ride_app.models import Ride
 
 @login_required
 def dashboard(request):
+    upcoming_rides = Ride.objects.filter(status='open').order_by('start_date', 'start_time')
+    rides_count = upcoming_rides.count()
     kpis = {
         "total_rides": 24,
         "this_week": 8,
         "connections_made": 38,
     }
-
-    upcoming_rides = [
-        {"location": "University Main Campus", "time": "8:00 AM • Today", "driver": "Sarah Johnson", "status": "confirmed"},
-        {"location": "Downtown Mall", "time": "2:00 PM • Tomorrow", "driver": "Mike Chen", "status": "pending"},
-    ]
 
     recent_activity = [
         {"activity": "Ride completed", "place": "University Campus", "time": "2 hours ago"},
@@ -25,6 +23,7 @@ def dashboard(request):
     context = {
         "kpis": kpis,
         "upcoming_rides": upcoming_rides,
+        "rides_count": rides_count,
     }
     return render(request, "dashboard_app/dashboard.html", context)
 

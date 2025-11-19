@@ -3,12 +3,28 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import PostRideForm, BookRideForm
 from .models import Ride, Booking
+from django.utils import timezone
 
 # Create your views here.
 
 @login_required
 def post_ride(request):
     """Render the post ride page"""
+
+    # Prevent posting if user already has a booking
+    active_booking = Booking.objects.filter(
+        passenger=request.user,
+        status__in=['confirmed', 'pending']  # adjust if you have other statuses
+    ).first()
+
+    if active_booking:
+        messages.error(
+            request,
+            "You cannot post a ride while you have an active booking. "
+            "Please cancel or complete your booking first."
+        )
+        return redirect('my_bookings')
+
     if request.method == 'POST':
         form = PostRideForm(request.POST)
         if form.is_valid():
@@ -16,7 +32,7 @@ def post_ride(request):
             ride.driver = request.user
             ride.status = 'open'
             ride.save()
-            return redirect('find_rides')
+            return redirect('my_rides')
     else:
         form = PostRideForm()
 
@@ -110,17 +126,45 @@ def my_rides(request):
 
 @login_required
 def close_ride(request, ride_id):
-    """Close a posted ride"""
+    """Close a posted ride and mark all bookings as closed"""
     ride = get_object_or_404(Ride, id=ride_id)
-    
+
     # Check if user is the ride owner
     if ride.driver != request.user:
         messages.error(request, "You can only close your own rides.")
         return redirect('find_rides')
-    
+
     # Close the ride
     ride.status = 'closed'
     ride.save()
-    
-    messages.success(request, "Ride closed successfully!")
+
+    # Mark all bookings as closed
+    Booking.objects.filter(ride=ride).update(status='closed')
+
+    messages.success(request, "Ride closed successfully! All bookings have been marked as closed.")
     return redirect('my_rides')
+
+@login_required
+def cancel_booking(request, booking_id):
+    """Allow a passenger to cancel their booking"""
+    booking = get_object_or_404(Booking, id=booking_id, passenger=request.user)
+    ride = booking.ride
+
+    # Optional: prevent cancellation if ride already started
+    if ride.start_date < timezone.now().date():
+        messages.error(request, "You cannot cancel a ride that has already started.")
+        return redirect('my_bookings')
+
+    # Update booking status
+    booking.status = 'cancelled'
+    booking.save()
+
+    # Return seats to the ride
+    ride.seats_available += booking.num_seats
+    # If ride was full, reopen it
+    if ride.status == 'full':
+        ride.status = 'open'
+    ride.save()
+
+    messages.success(request, "Your booking has been cancelled successfully.")
+    return redirect('my_bookings')
