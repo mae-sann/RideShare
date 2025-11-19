@@ -58,18 +58,18 @@
                             id="searchDate" 
                             class="search-input"
                             name="date"
-                            value="{{ reqeust.GET.date }}"
+                            value="{{ request.GET.date }}"
                         >
                     </div>
 
-                    <div class="search-group">
+                    <!-- <div class="search-group">
                         <label for="searchVehicle">Vehicle Type</label>
                         <select id="searchVehicle" class="search-select">
                             <option value="">All Vehicles</option>
                             <option value="car">Car</option>
                             <option value="motorcycle">Motorcycle</option>
                         </select>
-                    </div>
+                    </div> -->
 
                     <button type="submit" class="btn-search">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -160,29 +160,29 @@
     // Set minimum date to today
     const dateInput = document.getElementById('searchDate');
     const today = new Date().toISOString().split('T')[0];
-    dateInput.setAttribute('min', today);
+    // dateInput.setAttribute('min', today);
 
-    // Search form handler (placeholder for future backend integration)
-    document.getElementById('searchForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // // Search form handler (placeholder for future backend integration)
+    // document.getElementById('searchForm').addEventListener('submit', function(e) {
+    //     // e.preventDefault();
         
-        // Placeholder: In a real app, this would filter results
-        console.log('Search submitted');
+    //     // Placeholder: In a real app, this would filter results
+    //     console.log('Search submitted');
         
-        // Example: Show no results (toggle for demonstration)
-        // Uncomment to test no results state:
-        // document.getElementById('ridesGrid').style.display = 'none';
-        // document.getElementById('noResults').classList.add('show');
-        // document.getElementById('resultsCount').textContent = 'No rides found';
-    });
-
-    // Request ride button handlers
-    // document.querySelectorAll('.btn-request').forEach(button => {
-    //     button.addEventListener('click', function() {
-    //         // Placeholder for future backend integration
-    //         alert('Ride request feature coming soon!');
-    //     });
+    //     // Example: Show no results (toggle for demonstration)
+    //     // Uncomment to test no results state:
+    //     // document.getElementById('ridesGrid').style.display = 'none';
+    //     // document.getElementById('noResults').classList.add('show');
+    //     // document.getElementById('resultsCount').textContent = 'No rides found';
     // });
+
+    // // Request ride button handlers
+    // // document.querySelectorAll('.btn-request').forEach(button => {
+    // //     button.addEventListener('click', function() {
+    // //         // Placeholder for future backend integration
+    // //         alert('Ride request feature coming soon!');
+    // //     });
+    // // });
 
     document.addEventListener('DOMContentLoaded', function() {
     const alertArea = document.getElementById('alertArea');
