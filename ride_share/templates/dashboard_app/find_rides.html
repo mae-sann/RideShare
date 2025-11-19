@@ -160,7 +160,7 @@
     // Set minimum date to today
     const dateInput = document.getElementById('searchDate');
     const today = new Date().toISOString().split('T')[0];
-    // dateInput.setAttribute('min', today);
+    dateInput.setAttribute('min', today);
 
     // // Search form handler (placeholder for future backend integration)
     // document.getElementById('searchForm').addEventListener('submit', function(e) {
