@@ -125,6 +125,7 @@
                                 </div>
                             </div>
 
+
                             <div class="ride-remarks">
                                 <span class="location-label">Remarks</span>
                                 {{ride.remarks}}
@@ -133,6 +134,10 @@
                         </div>
 
                         <div class="ride-actions">
+                            <div class="ride-remarks">
+                                    <span class="location-label">Price</span>
+                                    PHP {{ride.price}}
+                                </div>
                             <div class="seats-available">
                                 <i class="fa-solid fa-user-group"></i>
                                 <span>{{ride.seats_available}} seats left</span>
