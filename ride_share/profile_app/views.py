@@ -99,6 +99,15 @@ def profile_view(request):
             user.save()
             print("DEBUG: Django user updated")
             
+            # ✅ ADDED: Update local RideShareUser phone number if it exists
+            try:
+                if hasattr(request.user, 'rideshareuser'):
+                    request.user.rideshareuser.phone = phone_number
+                    request.user.rideshareuser.save()
+                    print("DEBUG: RideShareUser phone number updated")
+            except Exception as e:
+                print(f"DEBUG: Warning - Could not update RideShareUser phone: {str(e)}")
+            
             # Update profile in Supabase using the helper function
             profile_data = {
                 'first_name': first_name,
@@ -132,7 +141,23 @@ def profile_view(request):
         print(f"DEBUG: Profile fetch response: {response}")
         
         profile_data = response.data[0] if response.data else {}
-        print(f"DEBUG: Profile data: {profile_data}")
+        print(f"DEBUG: Profile data from Supabase: {profile_data}")
+        
+        # ✅ ADDED: If phone number is missing in Supabase, get it from local RideShareUser
+        if not profile_data.get('phone_number'):
+            try:
+                if hasattr(request.user, 'rideshareuser'):
+                    local_phone = request.user.rideshareuser.phone
+                    if local_phone:
+                        profile_data['phone_number'] = local_phone
+                        print(f"DEBUG: Using local phone number: {local_phone}")
+                        
+                        # ✅ OPTIONAL: Auto-update Supabase with the local phone number
+                        update_data = {'phone_number': local_phone, 'updated_at': 'now()'}
+                        update_or_create_profile(user_id_str, update_data)
+                        print("DEBUG: Auto-updated Supabase with local phone number")
+            except Exception as e:
+                print(f"DEBUG: Warning - Could not fetch local phone: {str(e)}")
         
         # Check if profile picture URL exists and is accessible
         if profile_data.get('profile_picture_url'):
