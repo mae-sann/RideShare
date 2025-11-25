@@ -4,7 +4,7 @@
 {% block title %}My Posted Rides{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/find_rides.css' %}">
+<link rel="stylesheet" href="{% static 'css/my_bookings.css' %}">
     {% if messages %}
             <div class="alert-area" id="alertArea">
                 {% for message in messages %}
@@ -14,7 +14,8 @@
                 </div>
                 {% endfor %}
             </div>
-            {% endif %}
+    {% endif %}
+
 <div class="find-rides-container">
     <!-- Page Header -->
     <div class="page-header">
@@ -47,10 +48,7 @@
                         <div class="driver-avatar">{{ ride.driver.first_name|slice:":1" }}{{ ride.driver.last_name|slice:":1" }}</div>
                         <div class="driver-details">
                             <div class="driver-name">Your Ride</div>
-                            <span class="vehicle-badge">
-                                <i class="fa-solid fa-car"></i>
-                                Car
-                            </span>
+                            <div class="ride-price">${{ ride.price }}</div>
                         </div>
                     </div>
 
@@ -77,33 +75,41 @@
                         </div>
                         <div class="meta-item">
                             <i class="fa-solid fa-user-group"></i>
-                            <span>{{ ride.seats_available }} seats</span>
+                            <span>{{ ride.seats_available }} seat{{ ride.seats_available|pluralize }}</span>
                         </div>
                     </div>
+
+                    {% if ride.remarks %}
+                    <div class="ride-remarks">
+                        <i class="fa-regular fa-message"></i>
+                        <span>{{ ride.remarks }}</span>
+                    </div>
+                    {% endif %}
                 </div>
 
                 <div class="ride-actions">
-                    <div class="seats-available">
-                        <span class="status {% if ride.status == 'open' %}open{% elif ride.status == 'full' %}full{% else %}closed{% endif %}">
+                    <div class="booking-status">
+                        <span class="status {% if ride.status == 'open' %}confirmed{% elif ride.status == 'full' %}pending{% else %}cancelled{% endif %}">
                             {{ ride.status|title }}
                         </span>
                     </div>
-                    <div style="display: flex; gap: 8px; margin-top: 12px;">
-                        {% if ride.status == 'open' or ride.status == 'full' %}
-                        <form method="POST" action="{% url 'close_ride' ride.id %}" style="flex: 1;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn-request" style="width: 100%; font-size: 12px; border: none; cursor: pointer;">
-                                <i class="fa-solid fa-ban"></i>
-                                Close
-                            </button>
-                        </form>
-                        {% else %}
-                        <button class="btn-request" style="flex: 1; font-size: 12px; opacity: 0.5; cursor: not-allowed;" disabled>
-                            <i class="fa-solid fa-check"></i>
-                            Closed
+                    
+                    {% if ride.status == 'open' or ride.status == 'full' %}
+                    <form method="POST" action="{% url 'close_ride' ride.id %}" class="action-form">
+                        {% csrf_token %}
+                        <button type="submit" 
+                                class="btn-cancel"
+                                onclick="return confirm('Are you sure you want to close this ride? This cannot be undone.');">
+                            <i class="fa-solid fa-ban"></i>
+                            Close Ride
                         </button>
-                        {% endif %}
-                    </div>
+                    </form>
+                    {% else %}
+                    <button class="btn-cancel disabled" disabled>
+                        <i class="fa-solid fa-lock"></i>
+                        Closed
+                    </button>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
@@ -111,11 +117,11 @@
             <!-- No Rides Message -->
             <div class="no-results" id="noRides" style="grid-column: 1 / -1;">
                 <div class="no-results-icon">
-                    <i class="fa-regular fa-face-frown"></i>
+                    <i class="fa-regular fa-car-side"></i>
                 </div>
                 <h3>No Rides Posted Yet</h3>
                 <p>You haven't posted any rides yet. Start by posting your first ride to help others get around!</p>
-                <a href="{% url 'post_ride' %}" class="btn-request" style="margin-top: 16px;">
+                <a href="{% url 'post_ride' %}" class="btn-request" style="margin-top: 20px;">
                     <i class="fa-solid fa-plus"></i>
                     Post a Ride
                 </a>
@@ -124,39 +130,13 @@
     </div>
 </div>
 
-<style>
-    .status {
-        font-size: 12px;
-        font-weight: 700;
-        color: #334155;
-        background: #e2e8f0;
-        padding: 6px 12px;
-        border-radius: 999px;
-    }
-    .status.open {
-        background: #d1fae5;
-        color: #065f46;
-    }
-    .status.full {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-    .status.closed {
-        background: #fef3c7;
-        color: #92400e;
-    }
-    .no-results {
-        display: flex !important;
-    }
-</style>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    const alertArea = document.getElementById('alertArea');
-    if (alertArea) {
-        setTimeout(() => {
-            alertArea.style.display = 'none';
-        }, 5000);
+        const alertArea = document.getElementById('alertArea');
+        if (alertArea) {
+            setTimeout(() => {
+                alertArea.style.display = 'none';
+            }, 5000);
         }
     });
 </script>
