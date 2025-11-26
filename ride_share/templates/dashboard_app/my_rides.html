@@ -48,7 +48,7 @@
                         <div class="driver-avatar">{{ ride.driver.first_name|slice:":1" }}{{ ride.driver.last_name|slice:":1" }}</div>
                         <div class="driver-details">
                             <div class="driver-name">Your Ride</div>
-                            <div class="ride-price">${{ ride.price }}</div>
+                            <div class="ride-price">PHP {{ ride.price }}</div>
                         </div>
                     </div>
 
@@ -81,7 +81,7 @@
 
                     {% if ride.remarks %}
                     <div class="ride-remarks">
-                        <i class="fa-regular fa-message"></i>
+                        <span class="location-label"> Remarks</span>
                         <span>{{ ride.remarks }}</span>
                     </div>
                     {% endif %}
@@ -105,10 +105,10 @@
                         </button>
                     </form>
                     {% else %}
-                    <button class="btn-cancel disabled" disabled>
+                    <!-- <button class="btn-cancel disabled" disabled>
                         <i class="fa-solid fa-lock"></i>
                         Closed
-                    </button>
+                    </button> -->
                     {% endif %}
                 </div>
             </div>
