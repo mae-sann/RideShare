@@ -4,6 +4,7 @@ from django.contrib import messages
 from .forms import PostRideForm, BookRideForm
 from .models import Ride, Booking
 from django.utils import timezone
+from profile_app.supabase_utils import get_supabase_client
 
 # Create your views here.
 
@@ -43,6 +44,17 @@ def post_ride(request):
 def find_rides(request):
     """Render the find rides page"""
     rides = Ride.objects.filter(status='open').order_by('start_date', 'start_time')
+    # Initialize Supabase client
+    supabase = get_supabase_client()
+
+    # Fetch profile_picture_url for each driver
+    driver_ids = [ride.driver.id for ride in rides]
+    response = supabase.table('profiles').select('user_id, profile_picture_url').in_('user_id', driver_ids).execute()
+    driver_profiles = {p['user_id']: p['profile_picture_url'] for p in response.data} if response.data else {}
+
+    # Attach profile URL to each ride object for template
+    for ride in rides:
+        ride.driver_pic = driver_profiles.get(str(ride.driver.id))
 
     # Optional filter
     origin = request.GET.get('origin')
