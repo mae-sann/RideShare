@@ -97,7 +97,14 @@
                     <div class="ride-card">
                         <div class="ride-info">
                             <div class="ride-header">
-                                <div class="driver-avatar">{{ ride.driver.first_name|slice:":1" }}{{ ride.driver.last_name|slice:":1" }}</div><!--get initials-->
+                                {% if ride.driver_pic %}
+                                    <div class="driver-avatar" style="background-image: url('{{ ride.driver_pic }}')">
+                                    </div>
+                                {% else %}
+                                    <div class="driver-avatar" style="background: linear-gradient(135deg, var(--primary), #60a5fa);">
+                                        {{ ride.driver.first_name|first }}{{ ride.driver.last_name|first }}
+                                    </div>
+                                {% endif %}
                                 <div class="driver-details">
                                     <div class="driver-name">{{ ride.driver.get_full_name }}</div>
                                     <div class="ride-meta">
