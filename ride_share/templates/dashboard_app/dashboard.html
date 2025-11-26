@@ -131,7 +131,7 @@
             <div class="panel">
                 <div class="panel-head">
                     <h2><i class="fa-regular fa-clock"></i> Upcoming Rides</h2>
-                    <a href="#" class="link">View all</a>
+                    <a href="{% url 'find_rides' %}" class="link">View all</a>
                 </div>
                 <div class="list">
                     {% for ride in upcoming_rides %}
@@ -141,9 +141,9 @@
                             <div class="ride-info">
                                 <div class="ride-title">{{ ride.origin }} to {{ride.destination}}</div>
                                 <div class="ride-meta">
-                                    <span><i class="fa-regular fa-calendar"></i> {{ ride.time }}</span>
-                                    <span><i class="fa-regular fa-id-badge"></i> Driver: {{ ride.driver.get_full_name }}</span>
+                                    <span><i class="fa-regular fa-calendar"></i> {{ ride.start_date }} {{ride.start_time}}</span>
                                 </div>
+                                <span class="ride-meta">Driver: {{ ride.driver.get_full_name }}</span>
                             </div>
                         </div>
                         <span class="status">{{ ride.status }}</span>
