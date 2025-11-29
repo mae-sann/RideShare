@@ -4,140 +4,97 @@
 {% block title %}My Posted Rides{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/my_bookings.css' %}">
-    {% if messages %}
-            <div class="alert-area" id="alertArea">
-                {% for message in messages %}
-                <div class="alert-message {{ message.tags }}">
-                    <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
-                    <span>{{ message }}</span>
-                </div>
-                {% endfor %}
-            </div>
-    {% endif %}
+<link rel="stylesheet" href="{% static 'css/find_rides.css' %}">
+<style>
+    .request-box {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 12px;
+    }
+    .request-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .request-item:last-child { border-bottom: none; }
+    .btn-action {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn-accept { background: #10b981; color: white; margin-right: 4px; }
+    .btn-decline { background: #ef4444; color: white; }
+    .btn-complete { background: #3b82f6; color: white; width: 100%; margin-top: 10px; }
+</style>
 
 <div class="find-rides-container">
-    <!-- Page Header -->
     <div class="page-header">
-        <h1>
-            <i class="fa-solid fa-car"></i>
-            My Posted Rides
-        </h1>
-        <p>Manage all the rides you've posted.</p>
+        <h1><i class="fa-solid fa-car"></i> My Posted Rides</h1>
     </div>
 
-    <!-- Results Header -->
-    <div class="results-header">
-        <h2>Your Rides</h2>
-        <span class="results-count" id="resultsCount">
-            {% if rides %}
-                Showing {{ rides|length }} ride{{ rides|length|pluralize }}
-            {% else %}
-                No rides posted yet
-            {% endif %}
-        </span>
-    </div>
-
-    <!-- Rides List -->
-    <div class="rides-grid" id="ridesGrid">
+    <div class="rides-grid">
         {% if rides %}
             {% for ride in rides %}
             <div class="ride-card">
                 <div class="ride-info">
                     <div class="ride-header">
-                        <div class="driver-avatar">{{ ride.driver.first_name|slice:":1" }}{{ ride.driver.last_name|slice:":1" }}</div>
-                        <div class="driver-details">
-                            <div class="driver-name">Your Ride</div>
-                            <div class="ride-price">PHP {{ ride.price }}</div>
-                        </div>
+                        <div class="driver-name">From {{ ride.origin }} to {{ ride.destination }}</div>
                     </div>
-
-                    <div class="ride-route">
-                        <div class="location">
-                            <span class="location-label">From</span>
-                            <span class="location-name">{{ ride.origin }}</span>
-                        </div>
-                        <i class="fa-solid fa-arrow-right route-arrow"></i>
-                        <div class="location">
-                            <span class="location-label">To</span>
-                            <span class="location-name">{{ ride.destination }}</span>
-                        </div>
-                    </div>
-
                     <div class="ride-meta">
-                        <div class="meta-item">
-                            <i class="fa-regular fa-calendar"></i>
-                            <span>{{ ride.start_date }}</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fa-regular fa-clock"></i>
-                            <span>{{ ride.start_time }}</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fa-solid fa-user-group"></i>
-                            <span>{{ ride.seats_available }} seat{{ ride.seats_available|pluralize }}</span>
-                        </div>
+                        <span><i class="fa-regular fa-calendar"></i> {{ ride.start_date }}</span>
+                        <span><i class="fa-regular fa-clock"></i> {{ ride.start_time }}</span>
+                        <span class="status {{ ride.status }}">{{ ride.status|title }}</span>
                     </div>
-
-                    {% if ride.remarks %}
-                    <div class="ride-remarks">
-                        <span class="location-label"> Remarks</span>
-                        <span>{{ ride.remarks }}</span>
-                    </div>
-                    {% endif %}
                 </div>
 
                 <div class="ride-actions">
-                    <div class="booking-status">
-                        <span class="status {% if ride.status == 'open' %}confirmed{% elif ride.status == 'full' %}pending{% else %}cancelled{% endif %}">
-                            {{ ride.status|title }}
-                        </span>
-                    </div>
-                    
                     {% if ride.status == 'open' or ride.status == 'full' %}
-                    <form method="POST" action="{% url 'close_ride' ride.id %}" class="action-form">
-                        {% csrf_token %}
-                        <button type="submit" 
-                                class="btn-cancel"
-                                onclick="return confirm('Are you sure you want to close this ride? This cannot be undone.');">
-                            <i class="fa-solid fa-ban"></i>
-                            Close Ride
-                        </button>
-                    </form>
+                        <form method="POST" action="{% url 'complete_ride' ride.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-request btn-complete">
+                                <i class="fa-solid fa-flag-checkered"></i> Mark as Completed
+                            </button>
+                        </form>
+                        
+                        <div class="request-box">
+                            <strong>Pending Requests:</strong>
+                            {% if ride.bookings.all %}
+                                {% for booking in ride.bookings.all %}
+                                    {% if booking.status == 'pending' %}
+                                    <div class="request-item">
+                                        <span>{{ booking.passenger.first_name }} ({{ booking.num_seats }} seats)</span>
+                                        <div>
+                                            <a href="{% url 'accept_booking' booking.id %}" class="btn-action btn-accept">Accept</a>
+                                            <a href="{% url 'decline_booking' booking.id %}" class="btn-action btn-decline">Decline</a>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <p style="font-size: 12px; color: #64748b;">No pending requests.</p>
+                            {% endif %}
+                        </div>
                     {% else %}
-                    <!-- <button class="btn-cancel disabled" disabled>
-                        <i class="fa-solid fa-lock"></i>
-                        Closed
-                    </button> -->
+                            <button class="btn-request" disabled style="opacity: 0.6;">Ride {{ ride.status|title }}</button>
                     {% endif %}
                 </div>
             </div>
             {% endfor %}
         {% else %}
-            <!-- No Rides Message -->
-            <div class="no-results" id="noRides" style="grid-column: 1 / -1;">
-                <div class="no-results-icon">
-                    <i class="fa-regular fa-car-side"></i>
-                </div>
-                <h3>No Rides Posted Yet</h3>
-                <p>You haven't posted any rides yet. Start by posting your first ride to help others get around!</p>
-                <a href="{% url 'post_ride' %}" class="btn-request" style="margin-top: 20px;">
-                    <i class="fa-solid fa-plus"></i>
-                    Post a Ride
-                </a>
+            <div class="no-results">
+                <h3>No Rides Posted</h3>
+                <a href="{% url 'post_ride' %}" class="btn-request">Post a Ride</a>
             </div>
         {% endif %}
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const alertArea = document.getElementById('alertArea');
-        if (alertArea) {
-            setTimeout(() => {
-                alertArea.style.display = 'none';
-            }, 5000);
-        }
-    });
-</script>
 {% endblock %}

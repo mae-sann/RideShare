@@ -1,10 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.utils import timezone
+from django.db.models import Q
+from django.conf import settings
+
 from .forms import PostRideForm, BookRideForm
 from .models import Ride, Booking
-from django.utils import timezone
 from profile_app.supabase_utils import get_supabase_client
+from dashboard_app.models import Notification
 
 # Create your views here.
 
@@ -73,56 +78,94 @@ def find_rides(request):
 
 @login_required
 def book_ride(request, ride_id):
-    """Handle ride booking"""
     ride = get_object_or_404(Ride, id=ride_id)
-    
-    # Prevent driver from booking their own ride
-    if ride.driver == request.user:
-        messages.error(request, "You cannot book your own ride.")
-        return redirect('find_rides')
-    
-    # Check if user has an active posted ride
-    user_active_ride = Ride.objects.filter(driver=request.user, status='open').first()
-    if user_active_ride:
-        messages.error(request, "You cannot book a ride while you have an active posted ride. Please close or complete your ride first.")
-        return redirect('find_rides')
-    
-    # Check if user already booked this ride
-    existing_booking = Booking.objects.filter(ride=ride, passenger=request.user).first()
-    if existing_booking:
-        messages.warning(request, "You have already booked this ride.")
-        return redirect('find_rides')
     
     if request.method == 'POST':
         form = BookRideForm(request.POST)
         if form.is_valid():
-            num_seats = form.cleaned_data['num_seats']
-            
-            # Check available seats
-            if num_seats > ride.seats_available:
-                messages.error(request, f"Only {ride.seats_available} seats available.")
-                return redirect('find_rides')
-            
-            # Create booking
             booking = form.save(commit=False)
             booking.ride = ride
             booking.passenger = request.user
-            booking.status = 'confirmed'
+            booking.status = 'pending' 
             booking.save()
-            
-            # Update available seats
-            ride.seats_available -= num_seats
-            if ride.seats_available == 0:
-                ride.status = 'full'
-            ride.save()
-            
-            messages.success(request, "Ride booked successfully!")
+
+            Notification.objects.create(
+                user=ride.driver,
+                message=f"{request.user.first_name} requested {booking.num_seats} seat(s) for {ride.destination}.",
+                link="/ride/my-rides/"
+            )
+
+            messages.success(request, "Booking request sent!")
             return redirect('my_bookings')
     else:
         form = BookRideForm()
-    
-    return render(request, "dashboard_app/book_ride.html", {'form': form, 'ride': ride})
 
+    return render(request, 'dashboard_app/book_ride.html', {'ride': ride, 'form': form})
+
+@login_required
+def accept_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    ride = booking.ride
+
+    # US 4.2: Security check - only the driver can accept
+    if request.user != ride.driver:
+        messages.error(request, "You are not authorized to perform this action.")
+        return redirect('my_rides')
+
+    # Update Logic
+    if ride.seats_available >= booking.num_seats:
+        booking.status = 'confirmed'
+        booking.save()
+        
+        # Decrement seats only upon confirmation
+        ride.seats_available -= booking.num_seats
+        if ride.seats_available == 0:
+            ride.status = 'full'
+        ride.save()
+
+        # US 4.1: Notify passenger when booking is confirmed
+        Notification.objects.create(
+            user=booking.passenger,
+            message=f"Your ride to {ride.destination} has been confirmed!",
+            link="/ride/my-bookings/"
+        )
+        
+        messages.success(request, f"Confirmed booking for {booking.passenger.first_name}")
+    else:
+        messages.error(request, "Not enough seats available to confirm this booking.")
+
+    return redirect('my_rides')
+
+@login_required
+def decline_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    
+    if request.user != booking.ride.driver:
+        messages.error(request, "You are not authorized.")
+        return redirect('my_rides')
+
+    booking.status = 'declined'
+    booking.save()
+
+    Notification.objects.create(
+        user=booking.passenger,
+        message=f"Your booking request to {booking.ride.destination} was declined.",
+        link="/ride/find/"
+    )
+
+    messages.info(request, "Booking request declined.")
+    return redirect('my_rides')
+
+@login_required
+def complete_ride(request, ride_id):
+    ride = get_object_or_404(Ride, id=ride_id)
+
+    if request.user == ride.driver:
+        ride.status = 'completed'
+        ride.save()
+        messages.success(request, "Ride marked as completed.")
+    
+    return redirect('my_rides')
 
 @login_required
 def my_bookings(request):

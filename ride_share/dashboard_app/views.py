@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+
+from .models import Notification
 from ride_app.models import Ride
 
 @login_required
@@ -27,6 +29,20 @@ def dashboard(request):
     }
     return render(request, "dashboard_app/dashboard.html", context)
 
+@login_required
+def mark_all_read(request):
+    Notification.objects.filter(user=request.user).update(is_read=True)
+    return redirect('dashboard')
+
+@login_required
+def read_notification(request, notif_id):
+    notif = get_object_or_404(Notification, id=notif_id)
+    if notif.user == request.user:
+        notif.is_read = True
+        notif.save()
+        # Redirect to the link stored in the notification (e.g., My Rides)
+        return redirect(notif.link if notif.link else 'dashboard')
+    return redirect('dashboard')
 
 @login_required
 def logout_view(request):
