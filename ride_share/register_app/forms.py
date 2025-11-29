@@ -70,15 +70,6 @@ class UserRegisterForm(forms.Form):
             raise forms.ValidationError("Phone number must be digits after +")
         return phone_number
 
-    def clean_student_id(self):
-        student_id = self.cleaned_data['student_id']
-        pattern = r'^\d{2}-\d{4}-\d{3}$'
-        if not re.match(pattern, student_id):
-            raise forms.ValidationError("Student ID must follow format.")
-        from register_app.models import RideShareUser
-        if RideShareUser.objects.filter(student_id=student_id).exists():
-            raise forms.ValidationError("Student ID already registered.")
-        return student_id
         
     def clean_password(self):
         password = self.cleaned_data['password']
